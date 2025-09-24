@@ -81,4 +81,3 @@ The extension includes comprehensive logging for debugging:
 - Detailed error handling and fallback mechanisms
 
 Use the browser's developer console to monitor the authentication flow and identify any issues.
-# extension
