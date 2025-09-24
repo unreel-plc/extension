@@ -1,0 +1,116 @@
+---
+alwaysApply: true
+---
+
+# Development Rules
+
+## Project Goal
+
+### Social Media Bookmark Chrome Extension
+
+**Problem**: When saving reels, TikTok videos, and YouTube shorts, users save them to their respective platform bookmarks, making them unmanageable. Users often forget about saved content, and searching becomes difficult even when they remember. This creates a scattered and inefficient bookmarking experience.
+
+**Solution**: A centralized Chrome extension that serves as a unified bookmark manager for all social media video content (reels, shorts, TikTok videos, etc.) in one place.
+
+**Key Features**:
+
+- **Centralized Bookmarking**: Save videos from YouTube, TikTok, Instagram, and other platforms in one unified location
+- **AI-Powered Summarization**: Automatically generate summaries of bookmarked content using AI
+- **Flash Cards**: Create study materials from video content for better retention
+- **Social Sharing**: Share bookmarked content with friends and family
+- **Smart Organization**: Advanced search, tagging, and categorization features
+- **Cross-Platform Sync**: Access bookmarks across all devices
+
+**Value Proposition**: Never forget important videos again - get them all in one centralized place with enhanced features like AI summaries and flash cards for better content retention and sharing.
+
+## UI Framework
+
+- Use shadcn/ui components and Tailwind CSS for styling
+- Follow shadcn/ui patterns and conventions
+
+## API Integration
+
+- Use React Query (TanStack Query) with Axios for API calls
+- Use the provided api-client instance from `services/api-client.ts` for all API calls
+- **Always wrap axios calls with React Query hooks** - never use axios directly in components
+- **Use React Query's built-in states**: `isLoading`, `isPending`, `isError`, `error`, `data`, `isFetching`
+- Implement proper error handling and loading states using React Query's state management
+- Use React Query hooks for data fetching, caching, and state management
+- Leverage React Query's automatic caching, background refetching, and optimistic updates
+- **Maximize React Query functionality**: Use `useQuery`, `useMutation`, `useInfiniteQuery`, `useQueryClient`, and other React Query features extensively
+- **Organize API calls in hooks**: Create custom hooks in the `hooks/` folder for all API operations
+- **Hook structure**: Each API endpoint should have its own hook that uses React Query and the auth client instance
+- **Example pattern**: `hooks/useUsers.ts`, `hooks/useCreateUser.ts`, etc. - each calling the appropriate API using React Query
+
+## UI/UX Design
+
+### Chrome Extension - Social Media Bookmark App
+
+- **UX Simplicity**: Make the user experience very easy and intuitive - don't introduce complexity
+  - **One-Click Actions**: Every primary action should be achievable in a single click (bookmark, save, share)
+  - **Clear Visual Hierarchy**: Use size, color, and spacing to guide users naturally through the interface
+  - **Minimal Cognitive Load**: Reduce decision fatigue by limiting choices and using familiar patterns
+  - **Progressive Disclosure**: Show only essential information initially, reveal advanced options when needed
+  - **Instant Feedback**: Provide immediate visual confirmation for all user actions (animations, state changes)
+  - **Error Prevention**: Design to prevent errors rather than handle them (disable invalid actions, clear constraints)
+  - **Consistent Patterns**: Use the same interaction patterns throughout the extension (buttons, menus, navigation)
+  - **Contextual Relevance**: Show only relevant options based on current context (platform, content type, user state)
+  - **Graceful Defaults**: Pre-select sensible defaults to minimize required user input
+  - **Mobile-First Thinking**: Design for touch interactions even in desktop extension (larger click targets)
+  - **Accessibility by Default**: Ensure keyboard navigation, screen reader support, and sufficient color contrast
+  - **Performance Perception**: Use skeleton screens, optimistic updates, and smooth transitions to feel fast
+  - **User Mental Models**: Align with how users already think about bookmarking and organizing content
+  - **Forgiveness**: Allow easy undo/redo, provide confirmation for destructive actions
+  - **Discoverability**: Make features discoverable through tooltips, onboarding, and logical placement
+- **Compact, efficient design**: Optimize for popup windows and limited screen space
+- **Browser integration**: Seamless integration with Chrome's UI patterns and user expectations
+- **Quick access**: One-click bookmarking with minimal friction
+- **Context-aware**: Adapt UI based on current website (YouTube, TikTok, Instagram, etc.)
+- **Keyboard shortcuts**: Support for quick actions via keyboard
+
+### Extension-Specific UI Patterns
+
+- **Popup interface**: Clean, organized popup with tabs for bookmarks, search, and settings
+- **Context menu integration**: Right-click menu options for quick bookmarking
+- **Badge notifications**: Extension icon badge showing bookmark count or notifications
+- **Sidebar panel**: Optional sidebar for browsing bookmarks while on social media sites
+- **Toolbar integration**: Quick action buttons in browser toolbar
+
+### Core Features UI Patterns
+
+- **Bookmark cards**: Compact video previews with platform indicators and quick actions
+- **Search interface**: Fast search with filters for platform, date, and tags
+- **Sharing functionality**: Direct sharing to social platforms or copy links
+- **Collections/Folders**: Visual organization optimized for extension popup
+- **Quick bookmark**: One-click save with optional tags and collections
+
+### Visual Design Elements
+
+- **Chrome-native aesthetic**: Follow Chrome's design language and color scheme
+- **Compact typography**: Readable fonts optimized for small spaces
+- **Platform-specific icons**: Icons that clearly indicate source platform (YouTube, TikTok, etc.)
+- **Efficient spacing**: Optimized spacing for popup and sidebar layouts
+- **Subtle animations**: Light animations that don't interfere with browsing
+
+### Extension-Specific Interactions
+
+- **Click-to-bookmark**: Single click to save current video/content
+- **Keyboard navigation**: Full keyboard support for accessibility
+- **Drag-and-drop**: Drag bookmarks between collections in popup
+- **Auto-sync**: Seamless sync across devices with visual feedback
+- **Offline support**: Basic functionality when offline with sync indicators
+
+## Theming
+
+- Always consider both dark and light themes when adding UI components
+- Use CSS variables defined in `index.css` for consistent theming
+- Ensure all components work properly in both theme modes
+- Test components in both light and dark themes
+
+## Code Quality
+
+- Follow TypeScript best practices
+- Use proper component composition with shadcn/ui
+- Maintain consistent styling patterns across the application
+
+---

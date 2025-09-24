@@ -1,0 +1,71 @@
+{
+  "manifest_version": 3,
+  "name": "Unreel",
+  "version": "1.0.0",
+  "description": "A React-based browser extension",
+  "side_panel": {
+    "default_path": "index.html"
+  },
+  "action": {
+    "default_title": "Unreel Extension"
+  },
+  "background": {
+    "service_worker": "src/scripts/background.ts"
+  },
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "windows",
+    "storage",
+    "sidePanel",
+    "webNavigation",
+    "cookies",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://*/*",
+    "http://localhost:3000/*",
+    "http://localhost:5173/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["src/scripts/content-scripts/youtube/youtube-shorts.tsx"],
+      "run_at": "document_end"
+    },
+    {
+      "matches": ["https://www.instagram.com/*"],
+      "js": ["src/scripts/content-scripts/instagram/instagram-reels.tsx"],
+      "run_at": "document_end"
+    },
+    {
+      "matches": ["https://www.tiktok.com/*"],
+      "js": ["src/scripts/content-scripts/tiktok/tiktok.tsx"],
+      "run_at": "document_end"
+    },
+    {
+      "matches": ["https://web.facebook.com/*"],
+      "js": ["src/scripts/content-scripts/facebook/fb.tsx"],
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["src/scripts/content-scripts/shared/spa-detector.js"],
+      "matches": [
+        "https://www.instagram.com/*",
+        "https://www.tiktok.com/*",
+        "https://web.facebook.com/*"
+      ]
+    }
+  ],
+
+  "icons": {
+    "16": "vite.svg",
+    "48": "vite.svg",
+    "128": "vite.svg"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  }
+}
