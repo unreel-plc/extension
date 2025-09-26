@@ -1,5 +1,5 @@
 import ApiClient from "@/services/api-client";
-import { Bookmark, BookmarkCheck, Loader2 } from "lucide-react";
+import { Bookmark, BookmarkPlus, Loader2 } from "lucide-react";
 import { useState } from "react";
 
 type BookmarkSavedResponse = {
@@ -45,25 +45,36 @@ export default function BookmarkButton() {
       onClick={handleBookmark}
       disabled={isLoading}
       title="save to your unreel bookmarks"
-      className="group relative mb-4 inline-flex items-center justify-center"
+      className="group relative mb-4 inline-flex items-center justify-center h-8 w-8"
     >
       {/* Outer glow/ring for elegance */}
-      <span className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/20 via-fuchsia-500/10 to-emerald-500/20 blur-md opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      <span className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/30 via-purple-500/20 to-pink-500/30 blur-sm opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:blur-md" />
 
-      {/* Circular button */}
-      <span className="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-b from-[#f7f7f7] to-[#ebebeb] dark:from-[#2b2b2b] dark:to-[#1f1f1f] text-[#0e0e0e] dark:text-[#f1f1f1] shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_8px_20px_rgba(0,0,0,0.12)] ring-1 ring-black/5 dark:ring-white/5 transition-all duration-300 group-hover:scale-105 active:scale-95 disabled:opacity-75 disabled:cursor-not-allowed">
+      {/* Circular button with elegant glassmorphism effect */}
+      <span
+        className="relative w-8 h-8 rounded-full flex items-center justify-center 
+        bg-gradient-to-br from-white/90 to-white/70 
+        dark:from-gray-800/90 dark:to-gray-900/70
+        backdrop-blur-sm
+        shadow-[0_8px_32px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2)] 
+        dark:shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1)]
+        ring-1 ring-white/20 dark:ring-white/10
+        transition-all duration-300 
+        group-hover:scale-110 group-hover:shadow-[0_12px_40px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.3)]
+        dark:group-hover:shadow-[0_12px_40px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.15)]
+        active:scale-95 
+        disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
+      >
+        {/* Inner highlight for extra depth */}
+        <span className="absolute inset-0 rounded-full bg-gradient-to-br from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
         {isLoading ? (
-          <Loader2 className="h-6 w-6 animate-spin text-blue-500 dark:text-blue-400" />
+          <Loader2 className="h-4 w-4 animate-spin text-blue-600 dark:text-blue-400" />
         ) : isBookmarked ? (
-          <BookmarkCheck className="h-8 w-8 text-blue-600 dark:text-blue-400 drop-shadow-sm" />
+          <BookmarkPlus className="h-4 w-4 text-blue-600 dark:text-blue-400" />
         ) : (
-          <Bookmark className="h-8 w-8 text-white dark:text-white" />
+          <Bookmark className="h-4 w-4 text-gray-700 dark:text-gray-300" />
         )}
-      </span>
-
-      {/* Subtle status badge */}
-      <span className="pointer-events-none absolute -bottom-2 translate-y-full text-xs font-medium text-muted-foreground">
-        {isLoading ? "Saving..." : isBookmarked ? "Saved" : "Save"}
       </span>
     </button>
   );

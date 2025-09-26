@@ -11,7 +11,7 @@ export const GoogleLoginButton = () => {
       onClick={() =>
         loginSocials({
           provider: "google",
-          callbackURL: "http://localhost:5173",
+          callbackURL: window.location.origin,
         })
       }
       className="w-full h-12 bg-white dark:bg-slate-700 text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 transition-all duration-200 shadow-sm hover:shadow-md"

@@ -219,7 +219,72 @@ export class InstagramHandle {
       // Create a shadow host before the like button
       const host = document.createElement("div");
       host.id = "unreel-bookmark-button-host";
-      parent.insertBefore(host, likeButton);
+      // Add Instagram-like classes to match the UI styling
+      const instagramClasses = [
+        "x1i10hfl",
+        "x972fbf",
+        "x10w94by",
+        "x1qhh985",
+        "x14e42zd",
+        "x9f619",
+        "x3ct3a4",
+        "xdj266r",
+        "x14z9mp",
+        "xat24cr",
+        "x1lziwak",
+        "x16tdsg8",
+        "x1hl2dhg",
+        "xggy1nq",
+        "x1a2a7pz",
+        "x6s0dn4",
+        "xjbqb8w",
+        "x1ejq31n",
+        "x18oe1m7",
+        "x1sy0etr",
+        "xstzfhl",
+        "x1ypdohk",
+        "x78zum5",
+        "xl56j7k",
+        "x1y1aw1k",
+        "xf159sx",
+        "xwib8y2",
+        "xmzvs34",
+        "xcdnw81",
+      ];
+
+      instagramClasses.forEach((className) => {
+        if (className.trim()) {
+          host.classList.add(className.trim());
+        }
+      });
+      // Instagram action buttons are wrapped in separate <span> siblings.
+      // Insert our host inside a new <span> placed right after the Like button's <span>
+      // so it aligns horizontally with Comment/Share.
+      const likeSpan = likeButton.closest("span");
+      const actionsContainer = likeSpan?.parentElement ?? parent;
+
+      host.setAttribute("role", "button");
+      host.setAttribute("tabindex", "0");
+
+      const spanWrapper = document.createElement("span");
+      spanWrapper.appendChild(host);
+
+      if (likeSpan && actionsContainer) {
+        const afterLike = likeSpan.nextSibling;
+        if (afterLike) {
+          actionsContainer.insertBefore(spanWrapper, afterLike);
+        } else {
+          actionsContainer.appendChild(spanWrapper);
+        }
+      } else {
+        // Fallback: keep previous behavior within the same parent container
+        const referenceNode = likeButton.nextSibling;
+        if (referenceNode) {
+          parent.insertBefore(host, referenceNode);
+        } else {
+          parent.appendChild(host);
+        }
+      }
 
       // Attach shadow DOM and inject our Tailwind CSS
       const shadow = host.attachShadow({ mode: "open" });
