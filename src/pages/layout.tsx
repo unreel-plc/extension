@@ -8,7 +8,7 @@ import { useGetProssingBookmarks } from "@/hooks/use-engine";
 import useAuthentication from "@/hooks/use-authentication";
 
 const Layout = () => {
-  const { authenticated, isLoading, user } = useAuthStore();
+  const { authenticated, isLoading } = useAuthStore();
   const { currentUser } = useAuthentication();
   const [isAuthChecked, setIsAuthChecked] = useState(false);
   const [isDesktopSidebarOpen, setIsDesktopSidebarOpen] = useState(false);
@@ -180,7 +180,7 @@ const Layout = () => {
         </div>
         <div className="pb-16 md:pb-0">
           <Outlet />
-          {JSON.stringify(user)}
+          {/* {JSON.stringify(user)} */}
         </div>
       </div>
 
