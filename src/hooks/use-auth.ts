@@ -1,20 +1,9 @@
 import APIClient from "@/services/api-client";
-import { useAuthStore } from "@/stores/auth-store";
+import { useAuthStore, type User } from "@/stores/auth-store";
 import { useCallback } from "react";
 import { hydrateAuthStore, isUserAuthenticated } from "@/lib/auth";
 
 const apiClient = new APIClient("/auth");
-interface User {
-  id: string;
-  username: string;
-  email: string;
-  name: string;
-  role: string;
-  isVerified: boolean;
-  isActive: boolean;
-  tier: string;
-  karma_points: number;
-}
 
 export interface LoggedInUser {
   id: string;

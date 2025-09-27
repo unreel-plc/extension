@@ -51,7 +51,10 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["src/scripts/content-scripts/shared/spa-detector.js"],
+      "resources": [
+        "src/scripts/content-scripts/shared/spa-detector.js",
+        "src/index.css"
+      ],
       "matches": [
         "https://www.instagram.com/*",
         "https://www.tiktok.com/*",
