@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import APIClient from "@/services/api-client";
 import { useAuthStore } from "@/stores/auth-store";
+import { useCallback } from "react";
 
 const apiClient = new APIClient("/users");
 
@@ -49,13 +50,14 @@ const useAuthentication = () => {
       }, 1000);
     } catch (error) {
       console.error("Login error:", error);
+
       setAuthenticated(false);
       setIsLoading(false);
       return false;
     }
   };
 
-  const currentUser = async (): Promise<void> => {
+  const currentUser = useCallback(async (): Promise<void> => {
     setIsLoading(true);
     try {
       const result = await apiClient.get<any>("/me");
@@ -69,7 +71,18 @@ const useAuthentication = () => {
         }
 
         setAuthenticated(true);
+        setUser(result.user);
+
         console.log("User authenticated:", result.user);
+
+        // Close popup if we're in a Chrome extension popup window
+        if (chrome?.windows?.getCurrent) {
+          chrome.windows.getCurrent((window) => {
+            if (window?.type === "popup") {
+              chrome.windows.remove(window.id!);
+            }
+          });
+        }
       } else {
         throw new Error("Invalid user data");
       }
@@ -81,12 +94,13 @@ const useAuthentication = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [setIsLoading, setUser, setToken, setAuthenticated]);
 
   const logout = async () => {
     try {
       await apiClient.post("/logout");
       setAuthenticated(false);
+      setUser(null);
       logoutuser();
     } catch (error) {
       console.error("Logout error:", error);

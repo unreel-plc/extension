@@ -9,11 +9,13 @@ import Archive from "./pages/archive/archive";
 import ArchiveList from "./pages/archive/archive-list";
 import ArchiveDetail from "./pages/archive/archive-detail";
 import Dashboard from "./pages/dashboard/dashboard";
+import Profile from "./pages/profile/profile";
 
 const router = createBrowserRouter([
   {
     path: "/login",
     element: <GoogleLoginPage />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/",
@@ -49,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: "dashboard",
         element: <Dashboard />,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
       },
     ],
   },

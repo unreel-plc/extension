@@ -2,15 +2,13 @@ import { create } from "zustand";
 import { persist, type PersistStorage } from "zustand/middleware";
 
 export interface User {
-  id: string;
-  email: string;
   name: string;
-  username: string;
-  tier: string;
-  karma_points: number;
-  role: string;
-  isVerified: boolean;
-  isActive: boolean;
+  email: string;
+  emailVerified: boolean;
+  image: string;
+  createdAt: string;
+  updatedAt: string;
+  id: string;
 }
 
 interface AuthState {

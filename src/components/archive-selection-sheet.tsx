@@ -209,11 +209,11 @@ const ArchiveSelectionSheet = ({
                 </div>
               )}
 
-              {!hasNextPage && archives.length > 0 && (
+              {/* {!hasNextPage && archives.length > 0 && (
                 <p className="text-[11px] text-center text-muted-foreground py-2">
                   You have reached the end
                 </p>
-              )}
+              )} */}
             </div>
           )}
         </ScrollArea>

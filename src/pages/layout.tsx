@@ -13,14 +13,32 @@ const Layout = () => {
   const [isAuthChecked, setIsAuthChecked] = useState(false);
   const [isDesktopSidebarOpen, setIsDesktopSidebarOpen] = useState(false);
   const { data: processingBookmarks } = useGetProssingBookmarks({});
-
   useEffect(() => {
     const checkCurrentUser = async () => {
       await currentUser();
       setIsAuthChecked(true);
     };
     checkCurrentUser();
-  }, []);
+
+    // Listen for token updates from background script
+    const handleMessage = (message: { type: string; token: string }) => {
+      if (message.type === "TOKEN_UPDATED") {
+        console.log(
+          "Layout: Received TOKEN_UPDATED message, refreshing user data"
+        );
+        // Refresh user data when token is updated
+        currentUser();
+      }
+    };
+
+    // Add message listener
+    chrome.runtime.onMessage.addListener(handleMessage);
+
+    // Cleanup listener on unmount
+    return () => {
+      chrome.runtime.onMessage.removeListener(handleMessage);
+    };
+  }, []); // Empty dependency array - only run once on mount
 
   if (!isAuthChecked || isLoading) {
     return (

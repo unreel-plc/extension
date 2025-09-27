@@ -91,6 +91,7 @@ export const useInfiniteSearchBookmarks = ({
       return page < totalPages ? page + 1 : undefined;
     },
     initialPageParam: 1,
+    staleTime: 5000,
   });
 };
 
