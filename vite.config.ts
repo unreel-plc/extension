@@ -8,6 +8,14 @@ import manifest from "./public/manifest.json";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss(), crx({ manifest })],
+  build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, "index.html"),
+        redirect: path.resolve(__dirname, "redirect.html"),
+      },
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

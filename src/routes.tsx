@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import ErrorPage from "./pages/error-page";
 import Layout from "./pages/layout";
 import GoogleLoginPage from "./pages/auth/login/google/google-login";
+import RedirectPage from "./pages/auth/redirect";
 import SearchResults from "./pages/search/SearchResults";
 import BookmarkDetail from "./pages/search/BookmarkDetail";
 import Downloads from "./pages/downloads/downloads";
@@ -15,6 +16,11 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <GoogleLoginPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/redirect",
+    element: <RedirectPage />,
     errorElement: <ErrorPage />,
   },
   {

@@ -51,6 +51,10 @@
   ],
   "web_accessible_resources": [
     {
+      "resources": ["redirect.html"],
+      "matches": ["*://*/*"]
+    },
+    {
       "resources": [
         "src/scripts/content-scripts/shared/spa-detector.js",
         "src/index.css"
