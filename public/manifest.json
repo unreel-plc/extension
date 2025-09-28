@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Unreel",
   "version": "1.0.0",
-  "description": "A React-based browser extension",
+  "description": "Bookmark social media reels and shorts from YouTube, Instagram, TikTok, and Facebook in one organized place",
   "side_panel": {
     "default_path": "index.html"
   },
@@ -23,12 +23,11 @@
     "scripting"
   ],
   "host_permissions": [
-    "https://*/*",
+    "https://naod.me/*",
     "http://localhost:3000/*",
     "http://localhost:5173/*"
   ],
-  "content_scripts": [
-    {
+  "content_scripts": [{
       "matches": ["https://www.youtube.com/*"],
       "js": ["src/scripts/content-scripts/youtube/youtube-shorts.tsx"],
       "run_at": "document_end"
@@ -49,19 +48,17 @@
       "run_at": "document_end"
     }
   ],
-  "web_accessible_resources": [
-    {
-      "resources": [
-        "src/scripts/content-scripts/shared/spa-detector.js",
-        "src/index.css"
-      ],
-      "matches": [
-        "https://www.instagram.com/*",
-        "https://www.tiktok.com/*",
-        "https://web.facebook.com/*"
-      ]
-    }
-  ],
+  "web_accessible_resources": [{
+    "resources": [
+      "src/scripts/content-scripts/shared/spa-detector.js",
+      "src/index.css"
+    ],
+    "matches": [
+      "https://www.instagram.com/*",
+      "https://www.tiktok.com/*",
+      "https://web.facebook.com/*"
+    ]
+  }],
 
   "icons": {
     "16": "extension_icon16.png",
