@@ -49,16 +49,21 @@
     }
   ],
   "web_accessible_resources": [{
-    "resources": [
-      "src/scripts/content-scripts/shared/spa-detector.js",
-      "src/index.css"
-    ],
-    "matches": [
-      "https://www.instagram.com/*",
-      "https://www.tiktok.com/*",
-      "https://web.facebook.com/*"
-    ]
-  }],
+      "resources": ["redirect.html"],
+      "matches": ["*://*/*"]
+    },
+    {
+      "resources": [
+        "src/scripts/content-scripts/shared/spa-detector.js",
+        "src/index.css"
+      ],
+      "matches": [
+        "https://www.instagram.com/*",
+        "https://www.tiktok.com/*",
+        "https://web.facebook.com/*"
+      ]
+    }
+  ],
 
   "icons": {
     "16": "extension_icon16.png",
