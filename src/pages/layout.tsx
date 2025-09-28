@@ -38,7 +38,19 @@ const Layout = () => {
     return () => {
       chrome.runtime.onMessage.removeListener(handleMessage);
     };
-  }, []); // Empty dependency array - only run once on mount
+  }, [currentUser]); // Include currentUser dependency
+
+  // Reload current tab when user is authenticated
+  useEffect(() => {
+    if (authenticated && isAuthChecked) {
+      // Get current tab and reload it
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (tabs[0]?.id) {
+          chrome.tabs.reload(tabs[0].id);
+        }
+      });
+    }
+  }, [authenticated, isAuthChecked]);
 
   if (!isAuthChecked || isLoading) {
     return (
