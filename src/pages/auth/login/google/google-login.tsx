@@ -12,9 +12,9 @@ const GoogleLoginPage = () => {
     // Listen for token updates from background script
     const handleMessage = (message: { type: string; token: string }) => {
       if (message.type === "TOKEN_UPDATED") {
-        console.log(
-          "Login: Received TOKEN_UPDATED message, refreshing user data"
-        );
+        // console.log(
+        //   "Login: Received TOKEN_UPDATED message, refreshing user data"
+        // );
         // Refresh user data when token is updated
         currentUser();
       }

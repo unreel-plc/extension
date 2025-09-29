@@ -11,7 +11,7 @@ const RedirectPage = () => {
   const [isRedirecting, setIsRedirecting] = useState(true);
 
   useEffect(() => {
-    console.log("Better Auth redirect landed inside extension");
+    // console.log("Better Auth redirect landed inside extension");
 
     // When Google auth is done, Better Auth redirected here
     // At this point, cookies are set by your backend

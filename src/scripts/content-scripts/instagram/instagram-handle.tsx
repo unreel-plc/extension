@@ -17,7 +17,7 @@ export class InstagramHandle {
 
   constructor() {
     this.currentUrl = window.location.href;
-    console.log("hello", this.currentUrl);
+    // console.log("hello", this.currentUrl);
 
     this.handleAuth();
   }
@@ -25,7 +25,7 @@ export class InstagramHandle {
   async handleAuth() {
     this.authed = await isUserAuthenticated();
     if (this.authed) {
-      console.log("User is authenticated");
+      // console.log("User is authenticated");
       this.detectUrlChange();
       this.bootstrapReelsObserver();
       // Clean up any existing buttons first
@@ -68,7 +68,7 @@ export class InstagramHandle {
       "spa-url-change",
       (event: CustomEvent<{ url: string }>) => {
         this.currentUrl = event.detail.url;
-        console.log("Detected:", this.currentUrl);
+        // console.log("Detected:", this.currentUrl);
         // Clean up existing buttons on navigation
         this.cleanupExistingButtons();
         // Re-scan on navigation since DOM can be rebuilt
@@ -123,12 +123,12 @@ export class InstagramHandle {
 
         if (relevantMutations.length === 0) return;
 
-        console.log(
-          "[Unreel][IG] relevant mutations:",
-          relevantMutations.length,
-          "out of",
-          mutations.length
-        );
+        // console.log(
+        //   "[Unreel][IG] relevant mutations:",
+        //   relevantMutations.length,
+        //   "out of",
+        //   mutations.length
+        // );
 
         // Debounce processing to avoid excessive calls
         if (this.processingTimeout) {
@@ -148,9 +148,9 @@ export class InstagramHandle {
       const container = document.querySelector("main");
       if (!container) {
         // If <main> isn't available yet (SPA timing), retry shortly
-        console.warn(
-          "[Unreel][IG] <main> not found. Retrying observer attach..."
-        );
+        // console.warn(
+        //   "[Unreel][IG] <main> not found. Retrying observer attach..."
+        // );
         setTimeout(() => this.bootstrapReelsObserver(), 500);
         return;
       }
@@ -159,8 +159,8 @@ export class InstagramHandle {
         childList: true,
         subtree: true,
       });
-    } catch (error) {
-      console.warn("Failed to start reels observer", error);
+    } catch {
+      // console.warn("Failed to start reels observer", error);
     }
   };
 
@@ -184,7 +184,7 @@ export class InstagramHandle {
       // Check authentication once for all buttons
       const isAuthed = await this.isUserAuthenticated();
       if (!isAuthed) {
-        console.log("User not authenticated — skipping bookmark button render");
+        // console.log("User not authenticated — skipping bookmark button render");
         return;
       }
 

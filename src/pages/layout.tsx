@@ -23,9 +23,9 @@ const Layout = () => {
     // Listen for token updates from background script
     const handleMessage = (message: { type: string; token: string }) => {
       if (message.type === "TOKEN_UPDATED") {
-        console.log(
-          "Layout: Received TOKEN_UPDATED message, refreshing user data"
-        );
+        // console.log(
+        //   "Layout: Received TOKEN_UPDATED message, refreshing user data"
+        // );
         // Refresh user data when token is updated
         currentUser();
       }

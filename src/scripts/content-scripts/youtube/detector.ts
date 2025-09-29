@@ -53,7 +53,7 @@ class YouTubeShortsDetectorImpl implements YouTubeShortsDetector {
       return shortsData;
     }
 
-    console.log("Not a YouTube Shorts page");
+    // console.log("Not a YouTube Shorts page");
     const notShortsData: YouTubeShortsData = { isShorts: false };
     this.currentVideoData = notShortsData;
     return notShortsData;
@@ -78,7 +78,7 @@ class YouTubeShortsDetectorImpl implements YouTubeShortsDetector {
 
   public startDetection(): void {
     if (this.isActive) {
-      console.log("YouTube Shorts detector is already active");
+      // console.log("YouTube Shorts detector is already active");
       return;
     }
 
@@ -103,12 +103,12 @@ class YouTubeShortsDetectorImpl implements YouTubeShortsDetector {
       setTimeout(this.checkForVideoChange.bind(this), 100);
     });
 
-    console.log("YouTube Shorts detector started");
+    // console.log("YouTube Shorts detector started");
   }
 
   public stopDetection(): void {
     if (!this.isActive) {
-      console.log("YouTube Shorts detector is not active");
+      // console.log("YouTube Shorts detector is not active");
       return;
     }
 
@@ -123,7 +123,7 @@ class YouTubeShortsDetectorImpl implements YouTubeShortsDetector {
     // Remove event listeners
     window.removeEventListener("popstate", this.checkForVideoChange.bind(this));
 
-    console.log("YouTube Shorts detector stopped");
+    // console.log("YouTube Shorts detector stopped");
   }
 
   public getCurrentVideo(): YouTubeShortsData | null {
@@ -145,8 +145,8 @@ class YouTubeShortsDetectorImpl implements YouTubeShortsDetector {
     this.videoChangeCallbacks.forEach((callback) => {
       try {
         callback(videoData);
-      } catch (error) {
-        console.error("Error in video change callback:", error);
+      } catch {
+        // console.error("Error in video change callback:", error);
       }
     });
   }

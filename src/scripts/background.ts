@@ -4,10 +4,10 @@ try {
     try {
       if (!details.tabId || !details.url) return;
       if (!/https:\/\/www\.instagram\.com\//.test(details.url)) return;
-      console.log(
-        "Background: Instagram URL changed (history state):",
-        details.url
-      );
+      // console.log(
+      //   "Background: Instagram URL changed (history state):",
+      //   details.url
+      // );
     } catch (e) {
       console.error("Background: webNavigation onHistoryStateUpdated error", e);
     }
@@ -17,9 +17,9 @@ try {
     try {
       if (!details.tabId || !details.url) return;
       if (!/https:\/\/www\.instagram\.com\//.test(details.url)) return;
-      console.log("Background: Instagram URL committed:", details.url);
-    } catch (e) {
-      console.error("Background: webNavigation onCommitted error", e);
+      // console.log("Background: Instagram URL committed:", details.url);
+    } catch {
+      // console.error("Background: webNavigation onCommitted error", e);
     }
   });
 
@@ -27,7 +27,7 @@ try {
     try {
       if (!tab.url || !/https:\/\/www\.instagram\.com\//.test(tab.url)) return;
       if (changeInfo.url) {
-        console.log("Background: Instagram tab URL updated:", changeInfo.url);
+        // console.log("Background: Instagram tab URL updated:", changeInfo.url);
       }
     } catch (e) {
       console.error("Background: tabs.onUpdated error", e);
@@ -64,7 +64,7 @@ chrome.runtime.onMessage.addListener(
     sendResponse: (response?: BookmarkResponse) => void
   ) => {
     if (message.type === "BOOKMARK_VIDEO") {
-      console.log("Background: Received bookmark request:", message.data);
+      // console.log("Background: Received bookmark request:", message.data);
 
       // Store the bookmark data
       const bookmarkKey = `bookmark-${Date.now()}`;
@@ -78,7 +78,7 @@ chrome.runtime.onMessage.addListener(
           return;
         }
 
-        console.log("Background: Bookmark stored successfully");
+        // console.log("Background: Bookmark stored successfully");
         sendResponse({ success: true, bookmarkId: bookmarkKey });
       });
 
@@ -94,9 +94,9 @@ chrome.storage.onChanged.addListener(
     namespace: string
   ) => {
     if (namespace === "local" && changes["auth-storage"]) {
-      console.log(
-        "Background: auth-storage changed, notifying extension popup"
-      );
+      // console.log(
+      //   "Background: auth-storage changed, notifying extension popup"
+      // );
 
       // Try to notify the extension popup about the token change
       try {

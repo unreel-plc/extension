@@ -106,7 +106,7 @@ const useAuth = () => {
           token: token,
         }
       );
-      console.log("result", result);
+      // console.log("result", result);
       setUser(result.data.user);
       setAuthenticated(result.data.valid);
       setIsLoading(false);

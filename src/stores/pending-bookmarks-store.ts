@@ -22,7 +22,7 @@ export const usePendingBookmarksStore = create<PendingStoreState>((set) => ({
   items: {},
   add: (item) => {
     set((state) => ({ items: { ...state.items, [item._id]: item } }));
-    console.log("added item", item);
+    // console.log("added item", item);
   },
   remove: (id) =>
     set((state) => {

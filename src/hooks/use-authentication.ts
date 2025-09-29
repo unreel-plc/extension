@@ -73,7 +73,7 @@ const useAuthentication = () => {
         setAuthenticated(true);
         setUser(result.user);
 
-        console.log("User authenticated:", result.user);
+        // console.log("User authenticated:", result.user);
 
         // Close popup if we're in a Chrome extension popup window
         if (chrome?.windows?.getCurrent) {

@@ -53,7 +53,7 @@ export class YouTubeHandle {
 
   handleVideoChange = async (videoData: YouTubeShortsData): Promise<void> => {
     if (videoData.isShorts) {
-      console.log("Video changed to:", videoData);
+      // console.log("Video changed to:", videoData);
 
       // Clean up any existing bookmark buttons first
       this.cleanupExistingButton();
@@ -61,7 +61,7 @@ export class YouTubeHandle {
       // Only render the bookmark button if the user is authenticated
       const isAuthed = await this.isUserAuthenticated();
       if (!isAuthed) {
-        console.log("User not authenticated — skipping bookmark button render");
+        // console.log("User not authenticated — skipping bookmark button render");
         return;
       }
 
@@ -80,14 +80,14 @@ export class YouTubeHandle {
         7000
       )) as HTMLElement | null;
 
-      console.log("Shorts insertion target", insertionTarget);
+      // console.log("Shorts insertion target", insertionTarget);
       if (insertionTarget) {
         // Check if button already exists to prevent recreation
         const existingButton = document.querySelector(
           "#unreel-bookmark-button-host"
         );
         if (existingButton) {
-          console.log("Bookmark button already exists, skipping recreation");
+          // console.log("Bookmark button already exists, skipping recreation");
           return;
         }
 
@@ -102,12 +102,12 @@ export class YouTubeHandle {
         const root = createRoot(host);
         root.render(<BookmarkButton />);
       } else {
-        console.warn(
-          "Could not find insertion target for Shorts bookmark button"
-        );
+        // console.warn(
+        //   "Could not find insertion target for Shorts bookmark button"
+        // );
       }
     } else {
-      console.log("No YouTube Shorts video detected");
+      // console.log("No YouTube Shorts video detected");
       // Clean up when not on shorts page
       this.cleanupExistingButton();
     }

@@ -23,7 +23,7 @@ export class TikTokHandle {
   }
 
   private async handleAuth() {
-    console.log("tiktok handle auth");
+    // console.log("tiktok handle auth");
     this.authed = await this.isUserAuthenticated();
     if (!this.authed) return;
     this.bootstrapObserver();
@@ -40,7 +40,7 @@ export class TikTokHandle {
   }
 
   private bootstrapObserver() {
-    console.log("tiktok handle bootstrap observer");
+    // console.log("tiktok handle bootstrap observer");
     this.actionsObserver = new MutationObserver((mutations) => {
       // Debounce scans while scrolling loads batches
       if (this.scanTimeout) {
