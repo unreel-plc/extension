@@ -1,8 +1,6 @@
-import { ModeToggle } from "@/components/mode-toggle";
 import { GoogleLoginButton } from "./google-login-button-new";
 import { useAuthStore } from "@/stores/auth-store";
 import { Navigate } from "react-router-dom";
-import BookmarkButton from "@/components/bookmark-button";
 import { useEffect } from "react";
 import useAuthentication from "@/hooks/use-authentication";
 import logo from "../../../../../public/extension_icon48.png";
@@ -46,8 +44,6 @@ const GoogleLoginPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4">
       <div className="w-full max-w-md">
-        <ModeToggle />
-        <BookmarkButton />
         {/* Logo/Brand Section */}
         <div className="text-center mb-8">
           <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
