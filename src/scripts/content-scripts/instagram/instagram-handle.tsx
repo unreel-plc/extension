@@ -1,7 +1,7 @@
-import BookmarkButton from "@/components/bookmark-button";
 import { createRoot } from "react-dom/client";
 import styles from "@/index.css?inline";
 import { isUserAuthenticated } from "@/lib/auth";
+import InstaBookmarkButton from "@/components/instabookmark";
 
 declare global {
   interface WindowEventMap {
@@ -10,13 +10,11 @@ declare global {
 }
 
 export class InstagramHandle {
-  private currentUrl: string;
   private reelsObserver?: MutationObserver;
   private processingTimeout?: number;
   private authed: boolean = false;
 
   constructor() {
-    this.currentUrl = window.location.href;
     // console.log("hello", this.currentUrl);
 
     this.handleAuth();
@@ -64,17 +62,13 @@ export class InstagramHandle {
     document.documentElement.appendChild(script);
 
     // Listen for SPA URL changes in your content script
-    window.addEventListener(
-      "spa-url-change",
-      (event: CustomEvent<{ url: string }>) => {
-        this.currentUrl = event.detail.url;
-        // console.log("Detected:", this.currentUrl);
-        // Clean up existing buttons on navigation
-        this.cleanupExistingButtons();
-        // Re-scan on navigation since DOM can be rebuilt
-        this.processAllReels(document);
-      }
-    );
+    window.addEventListener("spa-url-change", () => {
+      // console.log("Detected:", this.currentUrl);
+      // Clean up existing buttons on navigation
+      this.cleanupExistingButtons();
+      // Re-scan on navigation since DOM can be rebuilt
+      this.processAllReels(document);
+    });
   };
 
   /**
@@ -298,7 +292,7 @@ export class InstagramHandle {
 
       // Render the React component inside the shadow root
       const root = createRoot(mount);
-      root.render(<BookmarkButton />);
+      root.render(<InstaBookmarkButton />);
     } catch (error) {
       console.warn("Failed to render bookmark button", error);
     }

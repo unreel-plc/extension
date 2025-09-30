@@ -1,5 +1,5 @@
 import ApiClient from "@/services/api-client";
-import { Bookmark, BookmarkCheck, Loader2 } from "lucide-react";
+import { BookmarkCheck, BookmarkPlus, Loader2 } from "lucide-react";
 import { useState } from "react";
 
 type BookmarkSavedResponse = {
@@ -13,7 +13,7 @@ type BookmarkSavedResponse = {
   __v: number;
 };
 
-export default function BookmarkButton() {
+export default function InstaBookmarkButton() {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const apiClient = new ApiClient("/engine");
@@ -62,7 +62,7 @@ export default function BookmarkButton() {
         ) : isBookmarked ? (
           <BookmarkCheck className="h-8 w-8 text-black" />
         ) : (
-          <Bookmark className="h-8 w-8 text-black" />
+          <BookmarkPlus className="h-8 w-8 text-black" />
         )}
       </span>
     </button>
