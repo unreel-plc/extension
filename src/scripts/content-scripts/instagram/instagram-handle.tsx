@@ -264,20 +264,10 @@ export class InstagramHandle {
       spanWrapper.appendChild(host);
 
       if (likeSpan && actionsContainer) {
-        const afterLike = likeSpan.nextSibling;
-        if (afterLike) {
-          actionsContainer.insertBefore(spanWrapper, afterLike);
-        } else {
-          actionsContainer.appendChild(spanWrapper);
-        }
+        actionsContainer.insertBefore(spanWrapper, likeSpan);
       } else {
         // Fallback: keep previous behavior within the same parent container
-        const referenceNode = likeButton.nextSibling;
-        if (referenceNode) {
-          parent.insertBefore(host, referenceNode);
-        } else {
-          parent.appendChild(host);
-        }
+        parent.insertBefore(host, likeButton);
       }
 
       // Attach shadow DOM and inject our Tailwind CSS
