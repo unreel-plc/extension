@@ -1,5 +1,5 @@
 import ApiClient from "@/services/api-client";
-import { Bookmark, BookmarkPlus, Loader2 } from "lucide-react";
+import { Bookmark, BookmarkCheck, Loader2 } from "lucide-react";
 import { useState } from "react";
 
 type BookmarkSavedResponse = {
@@ -44,7 +44,11 @@ export default function BookmarkButton() {
       }
       onClick={handleBookmark}
       disabled={isLoading}
-      title="save to your unreel bookmarks"
+      title={
+        isBookmarked
+          ? "Saved to unreel bookmarks"
+          : "save to your unreel bookmarks"
+      }
       className="group relative mb-4 inline-flex items-center justify-center h-8 w-8"
     >
       {/* Outer glow/ring for elegance */}
@@ -71,7 +75,7 @@ export default function BookmarkButton() {
         {isLoading ? (
           <Loader2 className="h-4 w-4 animate-spin text-blue-600 dark:text-blue-400" />
         ) : isBookmarked ? (
-          <BookmarkPlus className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+          <BookmarkCheck className="h-4 w-4 text-blue-600 dark:text-blue-400" />
         ) : (
           <Bookmark className="h-4 w-4 text-gray-700 dark:text-gray-300" />
         )}
