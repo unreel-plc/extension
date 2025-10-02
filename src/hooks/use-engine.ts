@@ -92,6 +92,8 @@ export const useInfiniteSearchBookmarks = ({
     },
     initialPageParam: 1,
     staleTime: 5000,
+    refetchInterval: 5000,
+    refetchIntervalInBackground: true,
   });
 };
 
