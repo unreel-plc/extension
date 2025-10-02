@@ -122,7 +122,7 @@ export const useGetProssingBookmarks = ({ limit = 50 }: { limit?: number }) => {
       apiClient.get<ProcessingBookmark[]>("/processing", {
         params: { limit },
       }),
-    refetchInterval: 0,
+    refetchInterval: 3000,
     refetchIntervalInBackground: true,
     staleTime: 0, // Data is considered stale immediately
     gcTime: 0, // Remove from cache immediately when component unmounts
