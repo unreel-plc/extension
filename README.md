@@ -1,6 +1,34 @@
 # Unreel Extension
 
-A React-based browser extension with Google OAuth authentication and Chrome storage integration.
+A React-based browser extension with Google OAuth authentication, Chrome storage integration, and **real-time WebSocket download progress tracking**.
+
+## 🆕 New Feature: Real-Time Download Progress
+
+The extension now supports **real-time download progress tracking** using WebSocket (Socket.IO) connections to the SparkReel backend!
+
+### Quick Links
+- 📚 [**WebSocket Integration Guide**](WEBSOCKET_INTEGRATION.md) - Comprehensive technical documentation
+- 🚀 [**Quick Start Guide**](WEBSOCKET_QUICKSTART.md) - Step-by-step testing instructions
+- 📋 [**Summary**](WEBSOCKET_SUMMARY.md) - Implementation overview
+- 💡 [**Usage Examples**](src/examples/websocket-examples.tsx) - Code examples for custom components
+
+### Features
+- ⚡ Real-time progress updates (5%, 30%, 55%, 75%, 100%)
+- 📊 Beautiful progress bars and status indicators
+- 🔔 Browser notifications on download completion
+- 📱 Multi-download support
+- 🔄 Automatic reconnection handling
+- ✅ Type-safe WebSocket integration
+
+### Getting Started with WebSocket
+1. Ensure backend is running with Socket.IO support
+2. Build extension: `npm run build`
+3. Navigate to Downloads page in extension
+4. Watch downloads progress in real-time!
+
+See [WEBSOCKET_QUICKSTART.md](WEBSOCKET_QUICKSTART.md) for detailed setup instructions.
+
+---
 
 ## Authentication Flow
 

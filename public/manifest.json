@@ -18,15 +18,15 @@
     "windows",
     "storage",
     "sidePanel",
-    "webNavigation"
+    "webNavigation",
+    "notifications"
   ],
   "host_permissions": [
     "https://naod.me/*",
     "http://localhost:3000/*",
     "http://localhost:5173/*"
   ],
-  "content_scripts": [
-    {
+  "content_scripts": [{
       "matches": ["https://www.youtube.com/*"],
       "js": ["src/scripts/content-scripts/youtube/youtube-shorts.tsx"],
       "run_at": "document_end"
@@ -47,8 +47,7 @@
       "run_at": "document_end"
     }
   ],
-  "web_accessible_resources": [
-    {
+  "web_accessible_resources": [{
       "resources": ["redirect.html"],
       "matches": ["*://*/*"]
     },
