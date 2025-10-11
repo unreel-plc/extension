@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/stores/auth-store";
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
@@ -29,9 +30,10 @@ export const useWebSocket = ({
   const [isConnected, setIsConnected] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const socketRef = useRef<Socket | null>(null);
+  const { token } = useAuthStore();
 
   useEffect(() => {
-    if (!autoConnect || !userId) return;
+    if (!autoConnect || !userId || !token) return;
 
     // Initialize Socket.IO connection
     const socket = io(url, {
@@ -40,6 +42,9 @@ export const useWebSocket = ({
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
       reconnectionAttempts: 5,
+      auth: {
+        token: token,
+      },
     });
 
     socketRef.current = socket;
@@ -50,6 +55,7 @@ export const useWebSocket = ({
       setIsConnected(true);
 
       // Authenticate immediately after connection
+      // The server should verify the token from the headers
       socket.emit("authenticate", { userId });
     });
 
@@ -79,7 +85,7 @@ export const useWebSocket = ({
         socket.disconnect();
       }
     };
-  }, [url, userId, autoConnect]);
+  }, [url, userId, autoConnect, token]);
 
   // Subscribe to download progress
   const onDownloadProgress = (

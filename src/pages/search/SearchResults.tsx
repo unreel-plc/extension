@@ -141,7 +141,7 @@ const SearchResults = () => {
   }
 
   return (
-    <div>
+    <div id="scrollableDiv">
       <InfiniteScroll
         dataLength={results.length}
         next={handleNext}
@@ -155,6 +155,7 @@ const SearchResults = () => {
           </div>
         }
         className="px-4 py-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4"
+        scrollableTarget="scrollableDiv"
         scrollThreshold={0.8}
         style={{ overflow: "visible" }}
       >
