@@ -8,6 +8,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Menu,
+  Video,
 } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
 import { useSearchStore } from "@/stores/search-store";
@@ -97,6 +98,11 @@ const SearchBookmarkInput = ({
       id: "tiktok",
       label: "TikTok",
       icon: <Music2 className="h-4 w-4" />,
+    },
+    {
+      id: "facebook",
+      label: "Facebook",
+      icon: <Video className="h-4 w-4" />,
     },
   ];
 
