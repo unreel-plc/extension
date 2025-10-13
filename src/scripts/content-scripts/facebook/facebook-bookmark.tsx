@@ -13,7 +13,7 @@ type BookmarkSavedResponse = {
   __v: number;
 };
 
-export default function InstaBookmarkButton() {
+export default function FacebookBookmark() {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const apiClient = new ApiClient("/engine");

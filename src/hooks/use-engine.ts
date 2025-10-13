@@ -1,5 +1,5 @@
 import ApiClient from "@/services/api-client";
-import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery, useMutation } from "@tanstack/react-query";
 
 export const apiClient = new ApiClient("/engine");
 
@@ -126,5 +126,23 @@ export const useGetProssingBookmarks = ({ limit = 50 }: { limit?: number }) => {
     refetchIntervalInBackground: true,
     staleTime: 0, // Data is considered stale immediately
     gcTime: 0, // Remove from cache immediately when component unmounts
+  });
+};
+
+// Detect and process manual link
+export interface DetectLinkRequest {
+  link: string;
+}
+
+export interface DetectLinkResponse {
+  success: boolean;
+  message: string;
+  downloadId?: string;
+}
+
+export const useDetectLink = () => {
+  return useMutation({
+    mutationFn: (data: DetectLinkRequest) =>
+      apiClient.post<DetectLinkResponse>("/detect", data),
   });
 };

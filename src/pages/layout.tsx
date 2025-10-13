@@ -21,7 +21,7 @@ const Layout = () => {
     checkCurrentUser();
 
     // Listen for token updates from background script
-    const handleMessage = (message: { type: string; token: string }) => {
+    const handleMessage = (message: { type: string; token?: string }) => {
       if (message.type === "TOKEN_UPDATED") {
         // console.log(
         //   "Layout: Received TOKEN_UPDATED message, refreshing user data"
@@ -39,18 +39,6 @@ const Layout = () => {
       chrome.runtime.onMessage.removeListener(handleMessage);
     };
   }, [currentUser]); // Include currentUser dependency
-
-  // Reload current tab when user is authenticated
-  useEffect(() => {
-    if (authenticated && isAuthChecked) {
-      // Get current tab and reload it
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        if (tabs[0]?.id) {
-          chrome.tabs.reload(tabs[0].id);
-        }
-      });
-    }
-  }, [authenticated, isAuthChecked]);
 
   if (!isAuthChecked || isLoading) {
     return (

@@ -1,7 +1,7 @@
-import BookmarkButton from "@/components/bookmark-button";
 import { createRoot } from "react-dom/client";
 import styles from "@/index.css?inline";
 import { isUserAuthenticated } from "@/lib/auth";
+import FacebookBookmark from "./facebook-bookmark";
 
 declare global {
   interface WindowEventMap {
@@ -149,7 +149,7 @@ export class FacebookHandle {
       shadow.appendChild(mount);
 
       const root = createRoot(mount);
-      root.render(<BookmarkButton />);
+      root.render(<FacebookBookmark />);
     } catch (error) {
       console.warn("[Unreel][FB] Failed to render bookmark button", error);
     }

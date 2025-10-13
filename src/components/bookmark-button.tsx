@@ -49,22 +49,15 @@ export default function BookmarkButton() {
           ? "Saved to unreel bookmarks"
           : "save to your unreel bookmarks"
       }
-      className=" mb-4 inline-flex items-center justify-center h-8 w-8 bg-blue-950"
+      className="bg-blue-950 text-white px-4 py-2 rounded-full h-20 w-20 flex items-center justify-center"
     >
-      {/* Outer glow/ring for elegance */}
-
-      {/* Circular button with elegant glassmorphism effect */}
-      <span className="relative w-12 h-12 rounded-full flex items-center justify-center  ">
-        {/* Inner highlight for extra depth */}
-
-        {isLoading ? (
-          <Loader2 className="h-8 w-8 animate-spin text-black " />
-        ) : isBookmarked ? (
-          <BookmarkCheck className="h-8 w-8 text-black" />
-        ) : (
-          <Bookmark className="h-8 w-8 text-black" />
-        )}
-      </span>
+      {isLoading ? (
+        <Loader2 className="h-10 w-10 text-white animate-spin" />
+      ) : isBookmarked ? (
+        <BookmarkCheck className="h-10 w-10 text-white" />
+      ) : (
+        <Bookmark className="h-10 w-10 text-white" />
+      )}
     </button>
   );
 }

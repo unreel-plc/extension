@@ -1,4 +1,4 @@
-import { useInfiniteSearchBookmarks } from "@/hooks/use-engine";
+import { useInfiniteSearchBookmarks, useDetectLink } from "@/hooks/use-engine";
 import { useSearchStore } from "@/stores/search-store";
 import {
   Heart,
@@ -7,12 +7,23 @@ import {
   Archive,
   Loader2,
   ExternalLink,
+  Plus,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
 import { toast } from "sonner";
 import ArchiveSelectionSheet from "@/components/archive-selection-sheet";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
 const SearchResults = () => {
   const {
@@ -32,6 +43,10 @@ const SearchResults = () => {
   const [selectedBookmarkId, setSelectedBookmarkId] = useState<string | null>(
     null
   );
+  const [manualLinkDialogOpen, setManualLinkDialogOpen] = useState(false);
+  const [manualLink, setManualLink] = useState("");
+
+  const detectLinkMutation = useDetectLink();
 
   const copyToClipboard = async (link: string, id: string) => {
     try {
@@ -68,6 +83,25 @@ const SearchResults = () => {
   const closeArchiveSheet = () => {
     setArchiveSheetOpen(false);
     setSelectedBookmarkId(null);
+  };
+
+  const handleManualLinkSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!manualLink.trim()) {
+      toast.error("Please enter a valid link");
+      return;
+    }
+
+    try {
+      const result = await detectLinkMutation.mutateAsync({ link: manualLink });
+      toast.success(result.message || "Link added successfully!");
+      setManualLink("");
+      setManualLinkDialogOpen(false);
+    } catch (error) {
+      console.error("Failed to detect link:", error);
+      toast.error("Failed to process link. Please try again.");
+    }
   };
 
   const {
@@ -142,23 +176,7 @@ const SearchResults = () => {
 
   return (
     <div id="scrollableDiv">
-      <InfiniteScroll
-        dataLength={results.length}
-        next={handleNext}
-        hasMore={hasNextPage || false}
-        loader={
-          <div className="col-span-full flex justify-center items-center py-4">
-            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-            <span className="ml-2 text-sm text-muted-foreground">
-              Loading more bookmarks...
-            </span>
-          </div>
-        }
-        className="px-4 py-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4"
-        scrollableTarget="scrollableDiv"
-        scrollThreshold={0.8}
-        style={{ overflow: "visible" }}
-      >
+      <div className="px-4 py-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
         {results.map((b) => (
           <div
             key={b._id}
@@ -286,7 +304,29 @@ const SearchResults = () => {
             </a>
           </div>
         ))}
-      </InfiniteScroll>
+      </div>
+
+      {/* Load More Button */}
+      {hasNextPage && (
+        <div className="flex justify-center items-center py-6 px-4">
+          <Button
+            onClick={handleNext}
+            disabled={isFetchingNextPage}
+            variant="outline"
+            size="lg"
+            className="min-w-[200px]"
+          >
+            {isFetchingNextPage ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Loading...
+              </>
+            ) : (
+              "Load More"
+            )}
+          </Button>
+        </div>
+      )}
 
       {/* Archive Selection Sheet */}
       {selectedBookmarkId && (
@@ -297,6 +337,70 @@ const SearchResults = () => {
           onArchiveSelect={handleAddToArchive}
         />
       )}
+
+      {/* Floating Action Button */}
+      <button
+        onClick={() => setManualLinkDialogOpen(true)}
+        className="fixed bottom-20 md:bottom-6 right-6 z-50 p-4 bg-primary text-primary-foreground rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 group"
+        title="Add manual link"
+      >
+        <Plus className="h-6 w-6 transition-transform duration-300 group-hover:rotate-90" />
+      </button>
+
+      {/* Manual Link Dialog */}
+      <Dialog
+        open={manualLinkDialogOpen}
+        onOpenChange={setManualLinkDialogOpen}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Manual Link</DialogTitle>
+            <DialogDescription>
+              Enter a link to a video from YouTube, TikTok, Instagram, or
+              Facebook to bookmark it.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleManualLinkSubmit}>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="link">Video Link</Label>
+                <Input
+                  id="link"
+                  type="url"
+                  placeholder="https://www.youtube.com/watch?v=..."
+                  value={manualLink}
+                  onChange={(e) => setManualLink(e.target.value)}
+                  disabled={detectLinkMutation.isPending}
+                  autoFocus
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setManualLinkDialogOpen(false);
+                  setManualLink("");
+                }}
+                disabled={detectLinkMutation.isPending}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={detectLinkMutation.isPending}>
+                {detectLinkMutation.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  "Save"
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

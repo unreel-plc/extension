@@ -25,6 +25,9 @@ const RedirectPage = () => {
         // Set redirecting state to false after user is fetched
         setIsRedirecting(false);
 
+        // Send refresh message to trigger tab reload
+        chrome.runtime.sendMessage({ type: "refresh" });
+
         // Small delay before closing to show the success state
         setTimeout(() => {
           // Optionally reload popup or close window

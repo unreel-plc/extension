@@ -50,6 +50,12 @@ interface BookmarkMessage {
   };
 }
 
+interface RefreshMessage {
+  type: "refresh";
+}
+
+type ExtensionMessage = BookmarkMessage | RefreshMessage;
+
 interface BookmarkResponse {
   success: boolean;
   bookmarkId?: string;
@@ -59,7 +65,7 @@ interface BookmarkResponse {
 // Listen for messages from content scripts
 chrome.runtime.onMessage.addListener(
   (
-    message: BookmarkMessage,
+    message: ExtensionMessage,
     _sender: chrome.runtime.MessageSender,
     sendResponse: (response?: BookmarkResponse) => void
   ) => {
@@ -83,6 +89,33 @@ chrome.runtime.onMessage.addListener(
       });
 
       return true; // Keep the message channel open for async response
+    } else if (message.type === "refresh") {
+      // Handle refresh message from redirect page after authentication
+      // console.log("Background: Received refresh request, reloading social media tabs");
+
+      // Reload all tabs with supported social media platforms
+      const platformUrls = [
+        "https://www.youtube.com/",
+        "https://www.tiktok.com/",
+        "https://www.instagram.com/",
+        "https://www.facebook.com/",
+      ];
+
+      chrome.tabs.query({}, (tabs) => {
+        tabs.forEach((tab) => {
+          if (tab.id && tab.url) {
+            // Check if tab URL matches any of our supported platforms
+            const shouldReload = platformUrls.some((platformUrl) =>
+              tab.url!.startsWith(platformUrl)
+            );
+            if (shouldReload) {
+              chrome.tabs.reload(tab.id);
+            }
+          }
+        });
+      });
+
+      return false; // No async response needed
     }
   }
 );
@@ -121,8 +154,7 @@ chrome.runtime.onInstalled.addListener(() => {
     // Prefer built-in behavior if available
     // This will open the side panel (with manifest's default_path) on action click
     // Requires "sidePanel" permission and Chrome 116+
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
+    void chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
   } catch {
     // Older Chrome versions may not support setPanelBehavior; ignore
   }

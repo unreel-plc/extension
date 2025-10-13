@@ -3,14 +3,23 @@ import { type YouTubeShortsData } from "./types";
 import BookmarkButton from "@/components/bookmark-button";
 import { createRoot } from "react-dom/client";
 import { isUserAuthenticated } from "@/lib/auth";
+import styles from "@/index.css?inline";
 
 export class YouTubeHandle {
   constructor() {
-    // Set up video change callback
-    youtubeShortsDetector.onVideoChange(this.handleVideoChange);
+    const waitForYouTubeReady = async () => {
+      // Wait for the Shorts video element to exist before starting detection
+      const videoElement = await this.waitForElement(["video"], 10000);
+      if (videoElement) {
+        youtubeShortsDetector.onVideoChange(this.handleVideoChange);
+        youtubeShortsDetector.startDetection();
+      } else {
+        console.warn("YouTube Shorts video element not found — retrying...");
+        setTimeout(waitForYouTubeReady, 2000);
+      }
+    };
 
-    // Start the YouTube Shorts detection
-    youtubeShortsDetector.startDetection();
+    waitForYouTubeReady();
   }
 
   private async waitForElement(
@@ -98,8 +107,17 @@ export class YouTubeHandle {
           "display: flex; flex-direction: column; align-items: center; margin-bottom: 16px;";
         insertionTarget.parentNode?.insertBefore(host, insertionTarget);
 
-        // Render the React component directly
-        const root = createRoot(host);
+        // Use Shadow DOM to isolate styles
+        const shadow = host.attachShadow({ mode: "open" });
+        const styleEl = document.createElement("style");
+        styleEl.textContent = styles;
+        shadow.appendChild(styleEl);
+
+        const mount = document.createElement("div");
+        shadow.appendChild(mount);
+
+        // Render the React component inside shadow DOM
+        const root = createRoot(mount);
         root.render(<BookmarkButton />);
       } else {
         // console.warn(
