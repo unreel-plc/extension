@@ -3,54 +3,89 @@ import APIClient from "@/services/api-client";
 import { useAuthStore } from "@/stores/auth-store";
 import { useCallback } from "react";
 
-const apiClient = new APIClient("/users");
-
-interface SignInSocialsPayload {
-  provider: string;
-  callbackURL: string;
-}
+const apiClient = new APIClient("/auth");
 
 const useAuthentication = () => {
-  const setUser = useAuthStore((state) => state.setUser);
-  const setAuthenticated = useAuthStore((state) => state.setAuthenticated);
-  const setIsLoading = useAuthStore((state) => state.setIsLoading);
-  const setToken = useAuthStore((state) => state.setToken);
-  const logoutuser = useAuthStore((state) => state.logout);
+  const {
+    setUser,
+    setAuthenticated,
+    setIsLoading,
+    setToken,
+    logout: logOutUser,
+  } = useAuthStore();
 
-  const loginSocials = async (data: SignInSocialsPayload) => {
+  const loginSocials = async () => {
     setIsLoading(true);
     try {
-      const result = await apiClient.post<{
-        url: string;
-        redirect: true;
-      }>("/sign-in/socials", data);
+      // Use Chrome extension OAuth flow
+      if (chrome?.identity) {
+        chrome.identity.getAuthToken(
+          { interactive: true },
+          async (googleToken) => {
+            if (googleToken) {
+              try {
+                console.log("Google OAuth Token:", googleToken);
+                // First, exchange the Google OAuth token with Google's token endpoint to get JWT ID token
+                const googleTokenResponse = await fetch(
+                  "https://oauth2.googleapis.com/token",
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: new URLSearchParams({
+                      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || "",
+                      client_secret:
+                        import.meta.env.VITE_GOOGLE_CLIENT_SECRET || "",
+                      refresh_token: googleToken as string,
+                      grant_type: "refresh_token",
+                    }),
+                  }
+                );
 
-      const popup = window.open(
-        result.data.url,
-        "unreel_auth",
-        "width=500,height=650,menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,noopener,noreferrer"
-      );
+                if (!googleTokenResponse.ok) {
+                  throw new Error(
+                    `Google token exchange failed: ${googleTokenResponse.status}`
+                  );
+                }
 
-      if (!popup) {
-        window.location.href = result.data.url;
-        return;
+                const googleTokenData = await googleTokenResponse.json();
+                console.log("Google JWT ID Token:", googleTokenData.id_token);
+
+                // Now send the JWT ID token to our backend
+                const result = await apiClient.post<{
+                  token: string;
+                  user: any;
+                }>("/google-token", {
+                  token: googleTokenData.id_token,
+                });
+
+                console.log("Backend JWT Token:", result);
+
+                // Set the JWT token in the auth store
+                setToken(result.data.token);
+                setUser(result.data.user);
+                setAuthenticated(true);
+                setIsLoading(false);
+              } catch (error) {
+                console.error("Token exchange error:", error);
+                setAuthenticated(false);
+                setIsLoading(false);
+              }
+            } else {
+              console.error("No Google token received");
+              setAuthenticated(false);
+              setIsLoading(false);
+            }
+          }
+        );
+      } else {
+        console.error("Chrome identity not available");
+        setAuthenticated(false);
+        setIsLoading(false);
       }
-
-      popup.focus?.();
-
-      // Listen for popup completion
-      const checkClosed = setInterval(() => {
-        if (popup.closed) {
-          clearInterval(checkClosed);
-          // Check authentication status after popup closes
-          setTimeout(() => {
-            currentUser();
-          }, 1000);
-        }
-      }, 1000);
     } catch (error) {
       console.error("Login error:", error);
-
       setAuthenticated(false);
       setIsLoading(false);
       return false;
@@ -62,7 +97,7 @@ const useAuthentication = () => {
     try {
       const result = await apiClient.get<any>("/me");
 
-      if (result && result.user) {
+      if (result) {
         setUser(result.user);
 
         // Store token if available
@@ -101,12 +136,12 @@ const useAuthentication = () => {
       await apiClient.post("/logout");
       setAuthenticated(false);
       setUser(null);
-      logoutuser();
+      logOutUser();
     } catch (error) {
       console.error("Logout error:", error);
       // Force logout even if API call fails
       setAuthenticated(false);
-      logoutuser();
+      logOutUser();
     }
   };
 

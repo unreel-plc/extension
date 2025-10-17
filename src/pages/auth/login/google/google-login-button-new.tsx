@@ -8,15 +8,7 @@ export const GoogleLoginButton = () => {
 
   return (
     <Button
-      onClick={() =>
-        loginSocials({
-          provider: "google",
-          callbackURL:
-            process.env.NODE_ENV === "development"
-              ? `${window.location.origin}/redirect`
-              : `${window.location.origin}/redirect.html`,
-        })
-      }
+      onClick={() => loginSocials()}
       className="w-full h-12 bg-white dark:bg-slate-700 text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 transition-all duration-200 shadow-sm hover:shadow-md"
       variant="outline"
       size="lg"

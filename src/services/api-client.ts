@@ -6,11 +6,6 @@ import { toast } from "sonner";
 
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL || "http://localhost:3000",
-  withCredentials: true, // send/receive cookies for cookie-based auth
-  headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-  },
 });
 
 // Add request interceptor to include bearer token
