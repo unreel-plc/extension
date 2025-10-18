@@ -1,43 +1,14 @@
 import { GoogleLoginButton } from "./google-login-button-new";
 import { useAuthStore } from "@/stores/auth-store";
 import { Navigate } from "react-router-dom";
-import { useEffect } from "react";
-import useAuthentication from "@/hooks/use-authentication";
 import logo from "../../../../../public/extension_icon48.png";
+
 const GoogleLoginPage = () => {
-  const { user, token } = useAuthStore();
-  const { currentUser } = useAuthentication();
+  const { authenticated } = useAuthStore();
 
-  useEffect(() => {
-    // Listen for token updates from background script
-    const handleMessage = (message: { type: string; token: string }) => {
-      if (message.type === "TOKEN_UPDATED") {
-        // console.log(
-        //   "Login: Received TOKEN_UPDATED message, refreshing user data"
-        // );
-        // Refresh user data when token is updated
-        currentUser();
-      }
-    };
-
-    // Add message listener
-    chrome.runtime.onMessage.addListener(handleMessage);
-
-    // Cleanup listener on unmount
-    return () => {
-      chrome.runtime.onMessage.removeListener(handleMessage);
-    };
-  }, [currentUser]);
-
-  if (user && token) {
+  if (authenticated) {
     // Close popup if we're in a Chrome extension popup window
-    if (chrome?.windows?.getCurrent) {
-      chrome.windows.getCurrent((window) => {
-        if (window?.type === "popup") {
-          chrome.windows.remove(window.id!);
-        }
-      });
-    }
+
     return <Navigate to="/" />;
   }
 

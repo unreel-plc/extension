@@ -8,7 +8,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 const Profile = () => {
-  const { user } = useAuthStore();
+  const { user, isLoading, authenticated } = useAuthStore();
   const { logout } = useAuthentication();
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -44,12 +44,24 @@ const Profile = () => {
       .slice(0, 2);
   };
 
-  if (!user) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <p>Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!authenticated || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600 dark:text-gray-400">
+            No user data available
+          </p>
         </div>
       </div>
     );
@@ -83,11 +95,11 @@ const Profile = () => {
                 </h2>
                 <div className="flex justify-center mt-2">
                   <Badge
-                    variant={user.emailVerified ? "default" : "secondary"}
+                    variant={user.email_verified ? "default" : "secondary"}
                     className="flex items-center gap-1"
                   >
                     <Shield className="h-3 w-3" />
-                    {user.emailVerified ? "Verified" : "Unverified"}
+                    {user.email_verified ? "Verified" : "Unverified"}
                   </Badge>
                 </div>
                 <div className="mt-6">
@@ -146,11 +158,11 @@ const Profile = () => {
                     </label>
                     <div className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                       <Badge
-                        variant={user.emailVerified ? "default" : "secondary"}
+                        variant={user.email_verified ? "default" : "secondary"}
                         className="flex items-center gap-1"
                       >
                         <Shield className="h-3 w-3" />
-                        {user.emailVerified ? "Verified" : "Unverified"}
+                        {user.email_verified ? "Verified" : "Unverified"}
                       </Badge>
                     </div>
                   </div>

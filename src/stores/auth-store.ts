@@ -2,13 +2,32 @@ import { create } from "zustand";
 import { persist, type PersistStorage } from "zustand/middleware";
 
 export interface User {
-  name: string;
+  _id: string;
+  iss: string;
+  azp: string;
+  aud: string;
+  sub: string;
   email: string;
-  emailVerified: boolean;
-  image: string;
+  email_verified: boolean;
+  name: string;
+  picture: string;
+  given_name: string;
+  family_name: string;
+  iat: number;
+  exp: number;
+  googleId: string;
+  provider: string;
+  username: string;
+  auth_provider: string;
+  auth_provider_id: string;
+  tier: string;
+  karma_points: number;
+  role: string;
+  isVerified: true;
+  isActive: boolean;
   createdAt: string;
   updatedAt: string;
-  id: string;
+  __v: number;
 }
 
 interface AuthState {

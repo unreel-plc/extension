@@ -19,7 +19,7 @@ const Layout = () => {
       setIsAuthChecked(true);
     };
     checkCurrentUser();
-  }, [currentUser]); // Include currentUser dependency
+  }, []); // Include currentUser dependency
 
   if (!isAuthChecked || isLoading) {
     return (
