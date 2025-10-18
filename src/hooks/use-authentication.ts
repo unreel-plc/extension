@@ -16,66 +16,44 @@ const useAuthentication = () => {
 
   const loginSocials = async () => {
     setIsLoading(true);
+    const manifest = chrome.runtime.getManifest();
+    const clientId = encodeURIComponent(manifest?.oauth2?.client_id ?? "");
+    const scopes = encodeURIComponent(
+      manifest?.oauth2?.scopes?.join(" ") ?? ""
+    );
+    const redirectUri = chrome.identity.getRedirectURL("google");
+
+    // Generate a cryptographically secure nonce for OpenID Connect
+    const nonce = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+
+    const url =
+      "https://accounts.google.com/o/oauth2/v2/auth" +
+      "?client_id=" +
+      clientId +
+      "&response_type=id_token" +
+      "&redirect_uri=" +
+      redirectUri +
+      "&scope=" +
+      scopes +
+      "&nonce=" +
+      nonce;
+    console.log("the redirect uri is", redirectUri);
+    console.log("the url is", url);
     try {
       // Use Chrome extension OAuth flow
       if (chrome?.identity) {
-        chrome.identity.getAuthToken(
-          { interactive: true },
-          async (googleToken) => {
-            if (googleToken) {
-              try {
-                console.log("Google OAuth Token:", googleToken);
-                // First, exchange the Google OAuth token with Google's token endpoint to get JWT ID token
-                const googleTokenResponse = await fetch(
-                  "https://oauth2.googleapis.com/token",
-                  {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                    body: new URLSearchParams({
-                      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || "",
-                      client_secret:
-                        import.meta.env.VITE_GOOGLE_CLIENT_SECRET || "",
-                      refresh_token: googleToken as string,
-                      grant_type: "refresh_token",
-                    }),
-                  }
-                );
-
-                if (!googleTokenResponse.ok) {
-                  throw new Error(
-                    `Google token exchange failed: ${googleTokenResponse.status}`
-                  );
-                }
-
-                const googleTokenData = await googleTokenResponse.json();
-                console.log("Google JWT ID Token:", googleTokenData.id_token);
-
-                // Now send the JWT ID token to our backend
-                const result = await apiClient.post<{
-                  token: string;
-                  user: any;
-                }>("/google-token", {
-                  token: googleTokenData.id_token,
-                });
-
-                console.log("Backend JWT Token:", result);
-
-                // Set the JWT token in the auth store
-                setToken(result.data.token);
-                setUser(result.data.user);
-                setAuthenticated(true);
-                setIsLoading(false);
-              } catch (error) {
-                console.error("Token exchange error:", error);
-                setAuthenticated(false);
-                setIsLoading(false);
-              }
+        chrome.identity.launchWebAuthFlow(
+          {
+            url: url,
+            interactive: true,
+          },
+          (result) => {
+            if (result) {
+              console.log("Login successful", result);
             } else {
-              console.error("No Google token received");
-              setAuthenticated(false);
-              setIsLoading(false);
+              console.error("Login failed", result);
             }
           }
         );

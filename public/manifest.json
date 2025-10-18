@@ -28,7 +28,7 @@
     "http://localhost:5173/*"
   ],
   "oauth2": {
-    "client_id": "212436644667-nmbd6aeomokiohmq4ftkvfkq89ok4jre.apps.googleusercontent.com",
+    "client_id": "212436644667-gq6uib92lbu39pgeo70se57jntqnjudl.apps.googleusercontent.com",
     "scopes": ["openid", "profile", "email"]
   },
   "content_scripts": [
