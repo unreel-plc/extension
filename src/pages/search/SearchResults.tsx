@@ -338,16 +338,16 @@ const SearchResults = () => {
         />
       )}
 
-      {/* Floating Action Button */}
+      {/* Floating Action Button - Desktop Only */}
       <button
         onClick={() => setManualLinkDialogOpen(true)}
-        className="fixed bottom-20 md:bottom-6 right-6 z-50 p-4 bg-primary text-primary-foreground rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 group"
+        className="hidden md:flex fixed bottom-6 right-6 z-50 p-4 bg-primary text-primary-foreground rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 group"
         title="Add manual link"
       >
         <Plus className="h-6 w-6 transition-transform duration-300 group-hover:rotate-90" />
       </button>
 
-      {/* Manual Link Dialog */}
+      {/* Manual Link Dialog - Desktop Only */}
       <Dialog
         open={manualLinkDialogOpen}
         onOpenChange={setManualLinkDialogOpen}

@@ -6,6 +6,7 @@ import { Home, Archive, User, Download, LayoutDashboard } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
 import { useGetProssingBookmarks } from "@/hooks/use-engine";
 import useAuthentication from "@/hooks/use-authentication";
+import MobileNav from "@/components/mobile-nav";
 
 const Layout = () => {
   const { authenticated, isLoading } = useAuthStore();
@@ -19,7 +20,7 @@ const Layout = () => {
       setIsAuthChecked(true);
     };
     checkCurrentUser();
-  }, []); // Include currentUser dependency
+  }, []);
 
   if (!isAuthChecked || isLoading) {
     return (
@@ -182,125 +183,7 @@ const Layout = () => {
           {/* {JSON.stringify(user)} */}
         </div>
       </div>
-
-      {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 z-20 border-t border-border bg-white/95 dark:bg-slate-900/90 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:supports-[backdrop-filter]:bg-slate-900/70">
-        <ul className="grid grid-cols-5">
-          <li>
-            <NavLink
-              to="/"
-              end
-              className={({ isActive }) =>
-                `flex flex-col items-center justify-center py-2 gap-1 text-xs ${
-                  isActive ? "text-primary" : "text-muted-foreground"
-                }`
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  <Home
-                    className="h-5 w-5"
-                    fill={isActive ? "currentColor" : "none"}
-                    strokeWidth={isActive ? 0 : 2}
-                  />
-                  <span>Home</span>
-                </>
-              )}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/dashboard"
-              className={({ isActive }) =>
-                `flex flex-col items-center justify-center py-2 gap-1 text-xs ${
-                  isActive ? "text-primary" : "text-muted-foreground"
-                }`
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  <LayoutDashboard
-                    className="h-5 w-5"
-                    fill={isActive ? "currentColor" : "none"}
-                    strokeWidth={isActive ? 0 : 2}
-                  />
-                  <span>Dashboard</span>
-                </>
-              )}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/archive"
-              className={({ isActive }) =>
-                `flex flex-col items-center justify-center py-2 gap-1 text-xs ${
-                  isActive ? "text-primary" : "text-muted-foreground"
-                }`
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  <Archive
-                    className="h-5 w-5"
-                    fill={isActive ? "currentColor" : "none"}
-                    strokeWidth={isActive ? 0 : 2}
-                  />
-                  <span>Collections</span>
-                </>
-              )}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/downloads"
-              className={({ isActive }) =>
-                `flex flex-col items-center justify-center py-2 gap-1 text-xs ${
-                  isActive ? "text-primary" : "text-muted-foreground"
-                }`
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  <div className="relative">
-                    <Download
-                      className="h-5 w-5"
-                      fill={isActive ? "currentColor" : "none"}
-                      strokeWidth={isActive ? 0 : 2}
-                    />
-                    {processingBookmarks && processingBookmarks.length > 0 && (
-                      <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
-                        {processingBookmarks.length}
-                      </span>
-                    )}
-                  </div>
-                  <span>Downloads</span>
-                </>
-              )}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/profile"
-              className={({ isActive }) =>
-                `flex flex-col items-center justify-center py-2 gap-1 text-xs ${
-                  isActive ? "text-primary" : "text-muted-foreground"
-                }`
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  <User
-                    className="h-5 w-5"
-                    fill={isActive ? "currentColor" : "none"}
-                    strokeWidth={isActive ? 0 : 2}
-                  />
-                  <span>Profile</span>
-                </>
-              )}
-            </NavLink>
-          </li>
-        </ul>
-      </nav>
+      <MobileNav />
     </div>
   );
 };
