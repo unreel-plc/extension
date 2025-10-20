@@ -2,7 +2,8 @@ import { create } from "zustand";
 import { persist, type PersistStorage } from "zustand/middleware";
 
 export interface User {
-  _id: string;
+  id?: string;
+  _id?: string;
   iss: string;
   azp: string;
   aud: string;
