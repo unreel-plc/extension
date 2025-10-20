@@ -15,7 +15,7 @@ const DownloadNotifications = () => {
 
   const { onDownloadProgress } = useWebSocket({
     url: backendUrl,
-    userId: user?.id || null,
+    userId: user?._id || null,
     autoConnect: true,
   });
 

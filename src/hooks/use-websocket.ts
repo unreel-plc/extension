@@ -35,47 +35,55 @@ export const useWebSocket = ({
   useEffect(() => {
     if (!autoConnect || !userId || !token) return;
 
-    // Initialize Socket.IO connection
+    // Initialize Socket.IO connection with WebSocket only (no polling)
     const socket = io(url, {
-      transports: ["websocket", "polling"], // Try websocket first, fallback to polling
+      transports: ["websocket"], // WebSocket only - no HTTP polling fallback
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
       reconnectionAttempts: 5,
-      auth: {
-        token: token,
+      // Send token in both extraHeaders (for WebSocket upgrade) and auth object
+      extraHeaders: {
+        Authorization: `Bearer ${token}`,
       },
+      auth: {
+        token: `Bearer ${token}`,
+      },
+      // Ensure proper path if backend uses custom path
+      path: "/socket.io/",
     });
 
     socketRef.current = socket;
 
     // Connection event handlers
     socket.on("connect", () => {
-      console.log("[WebSocket] Connected:", socket.id);
+      console.log("[WebSocket] ✅ Connected successfully!");
+      console.log("[WebSocket] Socket ID:", socket.id);
+      console.log("[WebSocket] Transport:", socket.io.engine.transport.name);
       setIsConnected(true);
 
       // Authenticate immediately after connection
-      // The server should verify the token from the headers
       socket.emit("authenticate", { userId });
     });
 
     socket.on("authenticated", (data) => {
-      console.log("[WebSocket] Authenticated:", data);
+      console.log("[WebSocket] ✅ Authenticated:", data);
       setIsAuthenticated(true);
     });
 
     socket.on("disconnect", (reason) => {
-      console.log("[WebSocket] Disconnected:", reason);
+      console.log("[WebSocket] ⚠️ Disconnected:", reason);
       setIsConnected(false);
       setIsAuthenticated(false);
     });
 
     socket.on("connect_error", (error) => {
-      console.error("[WebSocket] Connection error:", error);
+      console.error("[WebSocket] ❌ Connection error:", error.message);
+      console.error("[WebSocket] Error details:", error);
     });
 
     socket.on("error", (error) => {
-      console.error("[WebSocket] Error:", error);
+      console.error("[WebSocket] ❌ Socket error:", error);
     });
 
     // Cleanup on unmount

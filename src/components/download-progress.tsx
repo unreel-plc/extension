@@ -19,7 +19,7 @@ const DownloadProgress = () => {
 
   const { isConnected, isAuthenticated, onDownloadProgress } = useWebSocket({
     url: backendUrl,
-    userId: user?.id || null,
+    userId: user?._id || null,
     autoConnect: true,
   });
 
@@ -43,7 +43,12 @@ const DownloadProgress = () => {
     return () => {
       unsubscribe?.();
     };
-  }, [isAuthenticated, onDownloadProgress, addOrUpdateDownload, removeDownload]);
+  }, [
+    isAuthenticated,
+    onDownloadProgress,
+    addOrUpdateDownload,
+    removeDownload,
+  ]);
 
   const activeDownloads = Array.from(downloads.values());
 
