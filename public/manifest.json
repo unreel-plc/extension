@@ -12,6 +12,7 @@
   "background": {
     "service_worker": "src/scripts/background.ts"
   },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn9xnoSz0cK7pfSckC6lAd6nJPoMHm3sle+9Go62AVrXPkEla2zQgOkSI3pNkIRF/f6kYw1isPg00bNyD5vuRRLPlEjplbwJrlqcwmQ6wZbyc1Dr+jPHVA4svbnLrsmzAwL/akOE7JK/uKfmqVgtdlNIqyduJVYemgTrvjFyz2Ew3JWehHxid5vf8YnbGs3DjDR/aHJcSD8OiGwR76xaQt+INq1OVaAjl9ua1rLdBWNq5AXbpvkBIjCNdF9CJ1Olz2ljv24xV0rYxslLsOFAd56jltcLmGHW9FEnGIBcN1b90YzpWoD1zcd6LNuXCMNsvIWM7F7wgiXZLM+cp8dykawIDAQAB",
   "permissions": [
     "activeTab",
     "tabs",
