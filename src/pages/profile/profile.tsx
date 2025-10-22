@@ -46,10 +46,10 @@ const Profile = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p>Loading profile...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-foreground">Loading profile...</p>
         </div>
       </div>
     );
@@ -57,25 +57,21 @@ const Profile = () => {
 
   if (!authenticated || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <p className="text-gray-600 dark:text-gray-400">
-            No user data available
-          </p>
+          <p className="text-muted-foreground">No user data available</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div className="min-h-screen bg-background py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Profile
-          </h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">
+          <h1 className="text-3xl font-bold text-foreground">Profile</h1>
+          <p className="mt-2 text-muted-foreground">
             Manage your account settings and information
           </p>
         </div>
@@ -83,14 +79,14 @@ const Profile = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Profile Card */}
           <div className="lg:col-span-1">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 h-fit">
+            <div className="bg-card rounded-lg shadow-sm border border-border p-6 h-fit">
               <div className="text-center">
                 <div className="flex justify-center mb-4">
-                  <div className="h-24 w-24 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold">
+                  <div className="h-24 w-24 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-primary-foreground text-2xl font-bold">
                     {getInitials(user.name)}
                   </div>
                 </div>
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                <h2 className="text-xl font-semibold text-card-foreground mb-2">
                   {user.name}
                 </h2>
                 <div className="flex justify-center mt-2">
@@ -119,9 +115,9 @@ const Profile = () => {
 
           {/* Account Details */}
           <div className="lg:col-span-2">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+            <div className="bg-card rounded-lg shadow-sm border border-border">
+              <div className="px-6 py-4 border-b border-border">
+                <h3 className="text-lg font-semibold text-card-foreground flex items-center gap-2">
                   <UserIcon className="h-5 w-5" />
                   Account Information
                 </h3>
@@ -129,34 +125,30 @@ const Profile = () => {
               <div className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <label className="text-sm font-medium text-muted-foreground">
                       Full Name
                     </label>
-                    <div className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <UserIcon className="h-4 w-4 text-gray-500" />
-                      <span className="text-gray-900 dark:text-white">
-                        {user.name}
-                      </span>
+                    <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
+                      <UserIcon className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-foreground">{user.name}</span>
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <label className="text-sm font-medium text-muted-foreground">
                       Email Address
                     </label>
-                    <div className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <Mail className="h-4 w-4 text-gray-500" />
-                      <span className="text-gray-900 dark:text-white">
-                        {user.email}
-                      </span>
+                    <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
+                      <Mail className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-foreground">{user.email}</span>
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <label className="text-sm font-medium text-muted-foreground">
                       Account Status
                     </label>
-                    <div className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
                       <Badge
                         variant={user.email_verified ? "default" : "secondary"}
                         className="flex items-center gap-1"
@@ -168,24 +160,24 @@ const Profile = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <label className="text-sm font-medium text-muted-foreground">
                       Member Since
                     </label>
-                    <div className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <Calendar className="h-4 w-4 text-gray-500" />
-                      <span className="text-gray-900 dark:text-white">
+                    <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
+                      <Calendar className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-foreground">
                         {formatDate(user.createdAt)}
                       </span>
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <label className="text-sm font-medium text-muted-foreground">
                       Last Updated
                     </label>
-                    <div className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <Calendar className="h-4 w-4 text-gray-500" />
-                      <span className="text-gray-900 dark:text-white">
+                    <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
+                      <Calendar className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-foreground">
                         {formatDate(user.updatedAt)}
                       </span>
                     </div>
