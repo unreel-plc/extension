@@ -74,23 +74,20 @@ export class YouTubeHandle {
         return;
       }
 
-      // Find a reliable insertion point in Shorts UI and add the bookmark button above it
-      const insertionTarget = (await this.waitForElement(
-        [
-          // Shorts overlay like button (most reliable)
-          "ytd-reel-player-overlay-renderer #like-button",
-          // Generic like button id (fallback)
-          "#like-button",
-          // Actions container in Shorts overlay (fallback)
-          "ytd-reel-player-overlay-renderer #actions",
-          // Shorts renderer action buttons container (broad fallback)
-          "ytd-reel-video-renderer #actions",
-        ],
+      // Find the reel-action-bar-view-model container and like button for the new YouTube layout
+      const actionBarContainer = (await this.waitForElement(
+        ["#button-bar reel-action-bar-view-model"],
         7000
       )) as HTMLElement | null;
 
-      // console.log("Shorts insertion target", insertionTarget);
-      if (insertionTarget) {
+      const likeButton = actionBarContainer?.querySelector(
+        "like-button-view-model"
+      );
+
+      // console.log("Shorts action bar container", actionBarContainer);
+      // console.log("Like button", likeButton);
+
+      if (actionBarContainer && likeButton) {
         // Check if button already exists to prevent recreation
         const existingButton = document.querySelector(
           "#unreel-bookmark-button-host"
@@ -100,12 +97,11 @@ export class YouTubeHandle {
           return;
         }
 
-        // Create a container div before the like button
+        // Create a container div before the like button inside the action bar
         const host = document.createElement("div");
         host.id = "unreel-bookmark-button-host";
-        host.style.cssText =
-          "display: flex; flex-direction: column; align-items: center; margin-bottom: 16px;";
-        insertionTarget.parentNode?.insertBefore(host, insertionTarget);
+        host.style.cssText = "display: inline-block;";
+        actionBarContainer.insertBefore(host, likeButton);
 
         // Use Shadow DOM to isolate styles
         const shadow = host.attachShadow({ mode: "open" });
