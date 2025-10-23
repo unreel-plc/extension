@@ -122,10 +122,10 @@ export const useGetProssingBookmarks = ({ limit = 50 }: { limit?: number }) => {
       apiClient.get<ProcessingBookmark[]>("/processing", {
         params: { limit },
       }),
-    refetchInterval: 5000,
-    refetchIntervalInBackground: true,
-    staleTime: 0, // Data is considered stale immediately
-    gcTime: 0, // Remove from cache immediately when component unmounts
+    staleTime: 0, // Data is immediately stale, forces refetch on mount
+    refetchOnMount: "always", // Always refetch when component mounts
+    refetchOnWindowFocus: false, // Don't refetch on window focus
+    refetchInterval: false, // Disable polling
   });
 };
 

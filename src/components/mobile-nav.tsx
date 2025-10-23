@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
 const MobileNav = () => {
-  const { data: processingBookmarks } = useGetProssingBookmarks({});
+  const { data: processingBookmarks } = useGetProssingBookmarks({ limit: 200 });
   const [manualLinkDialogOpen, setManualLinkDialogOpen] = useState(false);
   const [manualLink, setManualLink] = useState("");
   const detectLinkMutation = useDetectLink();

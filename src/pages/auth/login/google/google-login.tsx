@@ -1,7 +1,7 @@
 import { GoogleLoginButton } from "./google-login-button-new";
 import { useAuthStore } from "@/stores/auth-store";
 import { Navigate } from "react-router-dom";
-import logo from "../../../../../public/extension_icon48.png";
+import logo from "@/assets/unreel_logo.png";
 
 const GoogleLoginPage = () => {
   const { authenticated } = useAuthStore();
@@ -17,10 +17,9 @@ const GoogleLoginPage = () => {
       <div className="w-full max-w-md">
         {/* Logo/Brand Section */}
         <div className="text-center mb-8">
-          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center mb-4 shadow-lg">
-            <img src={logo} alt="SparkReel" className="w-8 h-8" />
-          </div>
-
+          <div className="mx-auto w-16 h-16  flex items-center justify-center mb-4 ">
+            <img src={logo} alt="SparkReel" className="w-16 h-16" />
+          </div>{" "}
           <h1 className="text-3xl font-bold text-foreground mb-2">
             Welcome to Unreel
           </h1>

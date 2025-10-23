@@ -13,7 +13,7 @@ const Layout = () => {
   const { currentUser } = useAuthentication();
   const [isAuthChecked, setIsAuthChecked] = useState(false);
   const [isDesktopSidebarOpen, setIsDesktopSidebarOpen] = useState(false);
-  const { data: processingBookmarks } = useGetProssingBookmarks({});
+  const { data: processingBookmarks } = useGetProssingBookmarks({ limit: 200 });
   useEffect(() => {
     const checkCurrentUser = async () => {
       await currentUser();
