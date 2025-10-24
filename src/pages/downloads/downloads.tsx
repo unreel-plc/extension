@@ -2,11 +2,44 @@ import { useGetProssingBookmarks } from "@/hooks/use-engine";
 import DownloadProgress from "@/components/download-progress";
 import DownloadNotifications from "@/components/download-notifications";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useWebSocket } from "@/hooks/use-websocket";
+import { useAuthStore } from "@/stores/auth-store";
+import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Downloads = () => {
+  const user = useAuthStore((state) => state.user);
+  const queryClient = useQueryClient();
+  const backendUrl = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
+
   const { data: pendingItems, isLoading } = useGetProssingBookmarks({
     limit: 200,
   });
+
+  const { isAuthenticated, onDownloadCompleted } = useWebSocket({
+    url: backendUrl,
+    userId: user?._id || null,
+    autoConnect: true,
+  });
+
+  // Listen for download completed events and refetch videos
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const unsubscribe = onDownloadCompleted((data) => {
+      console.log("[Downloads] Download completed:", data);
+      
+      // Invalidate and refetch the downloads-infinite query to show new videos
+      void queryClient.invalidateQueries({ queryKey: ["downloads-infinite"] });
+      
+      // Also invalidate dashboard if needed
+      void queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+    });
+
+    return () => {
+      unsubscribe?.();
+    };
+  }, [isAuthenticated, onDownloadCompleted, queryClient]);
 
   return (
     <div className="px-4 py-4 space-y-6">

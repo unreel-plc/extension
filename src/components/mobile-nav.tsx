@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import LiveDownloadIndicator from "@/components/live-download-indicator";
 
 const MobileNav = () => {
   const { data: processingBookmarks } = useGetProssingBookmarks({ limit: 200 });
@@ -157,10 +158,11 @@ const MobileNav = () => {
                     fill={isActive ? "currentColor" : "none"}
                     strokeWidth={isActive ? 0 : 2}
                   />
+                  {/* Live Download Progress Indicator */}
+                  <LiveDownloadIndicator />
+                  {/* Legacy processing bookmarks count (fallback) */}
                   {processingBookmarks && processingBookmarks.length > 0 && (
-                    <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
-                      {processingBookmarks.length}
-                    </span>
+                    <span className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full bg-red-500/80" />
                   )}
                 </div>
               </>
