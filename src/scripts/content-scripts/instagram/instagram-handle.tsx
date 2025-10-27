@@ -1,7 +1,9 @@
 import { createRoot } from "react-dom/client";
+import type { Root } from "react-dom/client";
 import styles from "@/index.css?inline";
 import { isUserAuthenticated } from "@/lib/auth";
 import InstaBookmarkButton from "@/components/instabookmark";
+import BookmarkAllSavedButton from "@/components/bookmark-all-saved-button";
 
 declare global {
   interface WindowEventMap {
@@ -13,6 +15,7 @@ export class InstagramHandle {
   private reelsObserver?: MutationObserver;
   private processingTimeout?: number;
   private authed: boolean = false;
+  private bookmarkAllRoot?: Root;
 
   constructor() {
     // console.log("hello", this.currentUrl);
@@ -30,6 +33,8 @@ export class InstagramHandle {
       this.cleanupExistingButtons();
       // Initial pass for already-rendered reels/buttons
       this.processAllReels(document);
+      // Check if on saved page and render bookmark all button
+      this.handleSavedPage();
     }
   }
 
@@ -45,6 +50,41 @@ export class InstagramHandle {
     existingHosts.forEach((host) => {
       host.remove();
     });
+  }
+
+  private cleanupBookmarkAllButton(): void {
+    // Remove the bookmark all saved button if it exists
+    const existingButton = document.getElementById(
+      "unreel-bookmark-all-saved-host"
+    );
+    if (existingButton) {
+      if (this.bookmarkAllRoot) {
+        this.bookmarkAllRoot.unmount();
+        this.bookmarkAllRoot = undefined;
+      }
+      existingButton.remove();
+    }
+  }
+
+  /**
+   * Checks if the current URL is a saved page
+   * Pattern: /username/saved or /username/saved/collectionname
+   */
+  private isSavedPage(): boolean {
+    const path = window.location.pathname;
+    // Match pattern: /username/saved or /username/saved/anything
+    return /^\/[^/]+\/saved(\/.*)?$/.test(path);
+  }
+
+  /**
+   * Handles the saved page by adding the bookmark all button
+   */
+  private handleSavedPage(): void {
+    if (this.isSavedPage()) {
+      this.renderBookmarkAllButton();
+    } else {
+      this.cleanupBookmarkAllButton();
+    }
   }
 
   /**
@@ -68,6 +108,8 @@ export class InstagramHandle {
       this.cleanupExistingButtons();
       // Re-scan on navigation since DOM can be rebuilt
       this.processAllReels(document);
+      // Check if navigated to/from saved page
+      this.handleSavedPage();
     });
   };
 
@@ -285,6 +327,45 @@ export class InstagramHandle {
       root.render(<InstaBookmarkButton />);
     } catch (error) {
       console.warn("Failed to render bookmark button", error);
+    }
+  };
+
+  /**
+   * Renders the Bookmark All Saved button using Shadow DOM
+   */
+  private renderBookmarkAllButton = (): void => {
+    try {
+      // Check if button already exists
+      if (document.getElementById("unreel-bookmark-all-saved-host")) {
+        return;
+      }
+
+      // Create a shadow host for the bookmark all button
+      const host = document.createElement("div");
+      host.id = "unreel-bookmark-all-saved-host";
+
+      // Append to body
+      document.body.appendChild(host);
+
+      // Attach shadow DOM and inject our Tailwind CSS
+      const shadow = host.attachShadow({ mode: "open" });
+      const styleEl = document.createElement("style");
+      styleEl.textContent = styles;
+      shadow.appendChild(styleEl);
+
+      // Mount point inside shadow
+      const mount = document.createElement("div");
+      shadow.appendChild(mount);
+
+      // Render the React component inside the shadow root
+      this.bookmarkAllRoot = createRoot(mount);
+      this.bookmarkAllRoot.render(
+        <BookmarkAllSavedButton
+          onClose={() => this.cleanupBookmarkAllButton()}
+        />
+      );
+    } catch (error) {
+      console.warn("Failed to render bookmark all saved button", error);
     }
   };
 }
