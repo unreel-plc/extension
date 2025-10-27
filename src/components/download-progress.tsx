@@ -59,17 +59,13 @@ const DownloadProgress = () => {
         <div className="flex items-center gap-1.5">
           {isConnected ? (
             <>
-              <Wifi className="size-3.5 text-green-500" />
-              <span className="text-green-600 dark:text-green-400 font-medium">
-                Connected
-              </span>
+              <Wifi className="size-3.5 text-accent" />
+              <span className="text-accent font-medium">Connected</span>
             </>
           ) : (
             <>
-              <WifiOff className="size-3.5 text-red-500" />
-              <span className="text-red-600 dark:text-red-400 font-medium">
-                Disconnected
-              </span>
+              <WifiOff className="size-3.5 text-destructive" />
+              <span className="text-destructive font-medium">Disconnected</span>
             </>
           )}
         </div>
@@ -86,7 +82,7 @@ const DownloadProgress = () => {
           {activeDownloads.map((download) => (
             <div
               key={download.downloadId}
-              className="rounded-xl p-3 bg-white dark:bg-black shadow-sm ring-1 ring-black/5 dark:ring-white/10"
+              className="rounded-xl p-3 bg-card shadow-sm ring-1 ring-border"
             >
               <div className="flex gap-3">
                 {/* Thumbnail */}
@@ -111,14 +107,14 @@ const DownloadProgress = () => {
                   {/* Progress Bar */}
                   <div className="mt-2 w-full h-2 bg-muted rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300 ease-out"
+                      className="h-full bg-primary transition-all duration-300 ease-out"
                       style={{ width: `${download.progressPercent}%` }}
                     />
                   </div>
 
                   {/* Status Details */}
                   <div className="mt-2 flex items-center gap-2 text-xs">
-                    <span className="font-semibold text-blue-600 dark:text-blue-400">
+                    <span className="font-semibold text-primary">
                       {download.progressPercent}%
                     </span>
 
@@ -136,7 +132,7 @@ const DownloadProgress = () => {
                     {download.status === "completed" && (
                       <Badge
                         variant="outline"
-                        className="text-xs gap-1 text-green-600 border-green-600"
+                        className="text-xs gap-1 text-accent border-accent"
                       >
                         <CheckCircle2 className="size-3" />
                         Completed
@@ -145,7 +141,7 @@ const DownloadProgress = () => {
                     {download.status === "failed" && (
                       <Badge
                         variant="outline"
-                        className="text-xs gap-1 text-red-600 border-red-600"
+                        className="text-xs gap-1 text-destructive border-destructive"
                       >
                         <XCircle className="size-3" />
                         Failed

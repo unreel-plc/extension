@@ -28,10 +28,10 @@ const Downloads = () => {
 
     const unsubscribe = onDownloadCompleted((data) => {
       console.log("[Downloads] Download completed:", data);
-      
+
       // Invalidate and refetch the downloads-infinite query to show new videos
       void queryClient.invalidateQueries({ queryKey: ["downloads-infinite"] });
-      
+
       // Also invalidate dashboard if needed
       void queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     });
@@ -74,9 +74,9 @@ const Downloads = () => {
               {pendingItems?.map((p) => (
                 <div
                   key={p._id}
-                  className="mb-4 break-inside-avoid rounded-3xl p-2 bg-white dark:bg-black shadow-sm ring-1 ring-black/5 dark:ring-white/10"
+                  className="mb-4 break-inside-avoid rounded-3xl p-2 bg-card shadow-sm ring-1 ring-border"
                 >
-                  <div className="group block rounded-2xl overflow-hidden bg-white/70 dark:bg-white/5 backdrop-blur-sm">
+                  <div className="group block rounded-2xl overflow-hidden bg-card/70 backdrop-blur-sm">
                     <div className="relative">
                       <div className="w-full aspect-[9/16] bg-muted/60 grid place-items-center">
                         <div className="flex flex-col items-center gap-2 text-xs text-muted-foreground">

@@ -63,7 +63,13 @@ export default function BookmarkAllSavedButton({
       <button
         onClick={handleExtractUrls}
         disabled={isLoading}
-        className="bg-blue-950 hover:bg-blue-900 disabled:bg-blue-950/50 disabled:cursor-not-allowed text-white font-medium py-2 px-3 rounded-lg transition-colors flex items-center gap-2 shadow-lg text-sm"
+        className="font-medium py-2 px-3 rounded-lg transition-colors flex items-center gap-2 shadow-lg text-sm disabled:cursor-not-allowed"
+        style={{
+          backgroundColor: isLoading
+            ? "oklch(0.55 0.12 25 / 0.5)"
+            : "oklch(0.55 0.12 25)",
+          color: "oklch(0.98 0.01 90)",
+        }}
         title={
           isBookmarked
             ? "All saved posts bookmarked"
@@ -71,6 +77,16 @@ export default function BookmarkAllSavedButton({
             ? "Bookmarking..."
             : "Bookmark all saved posts"
         }
+        onMouseEnter={(e) => {
+          if (!isLoading) {
+            e.currentTarget.style.backgroundColor = "oklch(0.50 0.12 25)";
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!isLoading) {
+            e.currentTarget.style.backgroundColor = "oklch(0.55 0.12 25)";
+          }
+        }}
       >
         {isLoading ? (
           <>
@@ -92,9 +108,19 @@ export default function BookmarkAllSavedButton({
       {onClose && (
         <button
           onClick={onClose}
-          className="bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-lg transition-colors shadow-lg"
+          className="p-2 rounded-lg transition-colors shadow-lg"
+          style={{
+            backgroundColor: "oklch(0.88 0.01 95)",
+            color: "oklch(0.38 0.02 60)",
+          }}
           aria-label="Close"
           title="Close"
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "oklch(0.82 0.01 95)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "oklch(0.88 0.01 95)";
+          }}
         >
           <X className="h-4 w-4" />
         </button>
