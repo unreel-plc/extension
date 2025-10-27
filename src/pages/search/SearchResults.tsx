@@ -10,7 +10,7 @@ import {
   Plus,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import ArchiveSelectionSheet from "@/components/archive-selection-sheet";
 import {
@@ -24,8 +24,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { useWebSocket } from "@/hooks/use-websocket";
+import { useAuthStore } from "@/stores/auth-store";
+import { useQueryClient } from "@tanstack/react-query";
 
 const SearchResults = () => {
+  const user = useAuthStore((state) => state.user);
+  const queryClient = useQueryClient();
+  const backendUrl = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
   const {
     query,
     platform,
@@ -122,6 +128,31 @@ const SearchResults = () => {
     sortBy,
     sortOrder,
   });
+
+  const { isAuthenticated, onDownloadCompleted } = useWebSocket({
+    url: backendUrl,
+    userId: user?._id || null,
+    autoConnect: true,
+  });
+
+  // Listen for download completed events and refetch videos
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const unsubscribe = onDownloadCompleted((data) => {
+      console.log("[SearchResults] Download completed:", data);
+      
+      // Invalidate and refetch the downloads-infinite query to show new videos
+      void queryClient.invalidateQueries({ queryKey: ["downloads-infinite"] });
+      
+      // Show a toast notification
+      toast.success(`"${data.metadata?.title || "Video"}" is now available!`);
+    });
+
+    return () => {
+      unsubscribe?.();
+    };
+  }, [isAuthenticated, onDownloadCompleted, queryClient]);
 
   const handleNext = () => {
     if (hasNextPage && !isFetchingNextPage) {

@@ -7,6 +7,7 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { useGetProssingBookmarks } from "@/hooks/use-engine";
 import useAuthentication from "@/hooks/use-authentication";
 import MobileNav from "@/components/mobile-nav";
+import LiveDownloadIndicator from "@/components/live-download-indicator";
 
 const Layout = () => {
   const { authenticated, isLoading } = useAuthStore();
@@ -20,6 +21,7 @@ const Layout = () => {
       setIsAuthChecked(true);
     };
     checkCurrentUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!isAuthChecked || isLoading) {
@@ -129,10 +131,11 @@ const Layout = () => {
                     fill={isActive ? "currentColor" : "none"}
                     strokeWidth={isActive ? 0 : 2}
                   />
+                  {/* Live Download Progress Indicator */}
+                  <LiveDownloadIndicator />
+                  {/* Legacy processing bookmarks count (fallback) */}
                   {processingBookmarks && processingBookmarks.length > 0 && (
-                    <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
-                      {processingBookmarks.length}
-                    </span>
+                    <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-red-500/80" />
                   )}
                 </div>
                 <span>Downloads</span>

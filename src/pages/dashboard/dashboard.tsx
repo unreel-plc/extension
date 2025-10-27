@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DatePicker } from "@/components/ui/date-picker";
 import { useDashboard } from "@/hooks/use-dashboard";
 import type { DashboardResponse } from "@/types/dashboard";
@@ -19,6 +19,9 @@ import {
   ChevronUp,
   ExternalLink,
 } from "lucide-react";
+import { useWebSocket } from "@/hooks/use-websocket";
+import { useAuthStore } from "@/stores/auth-store";
+import { useQueryClient } from "@tanstack/react-query";
 
 const toISODate = (d?: Date) => (d ? d.toISOString() : undefined);
 
@@ -171,12 +174,40 @@ const Dashboard = () => {
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
 
   const navigate = useNavigate();
+  const user = useAuthStore((state) => state.user);
+  const queryClient = useQueryClient();
+  const backendUrl = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
 
   const { data, isLoading, isFetching, isError } = useDashboard({
     recentLimit: Number(recentLimit),
     startDate: toISODate(start) ?? "",
     endDate: toISODate(end) ?? "",
   });
+
+  const { isAuthenticated, onDownloadCompleted } = useWebSocket({
+    url: backendUrl,
+    userId: user?._id || null,
+    autoConnect: true,
+  });
+
+  // Listen for download completed events and refetch dashboard
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const unsubscribe = onDownloadCompleted((data) => {
+      console.log("[Dashboard] Download completed:", data);
+      
+      // Invalidate and refetch dashboard data
+      void queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+      
+      // Also invalidate downloads list
+      void queryClient.invalidateQueries({ queryKey: ["downloads-infinite"] });
+    });
+
+    return () => {
+      unsubscribe?.();
+    };
+  }, [isAuthenticated, onDownloadCompleted, queryClient]);
 
   const copyToClipboard = async (link: string, id: string) => {
     try {

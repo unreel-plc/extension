@@ -36,7 +36,8 @@ export const useWebSocket = ({
     if (!autoConnect || !userId || !token) return;
 
     // Initialize Socket.IO connection with WebSocket only (no polling)
-    const socket = io(url, {
+    // Connect to the /engine namespace to match backend EngineGateway
+    const socket = io(`${url}/engine`, {
       transports: ["websocket"], // WebSocket only - no HTTP polling fallback
       reconnection: true,
       reconnectionDelay: 1000,
@@ -109,6 +110,20 @@ export const useWebSocket = ({
     };
   };
 
+  // Subscribe to download completed event
+  const onDownloadCompleted = (
+    callback: (data: DownloadProgressData) => void
+  ) => {
+    if (!socketRef.current) return;
+
+    socketRef.current.on("download:completed", callback);
+
+    // Return unsubscribe function
+    return () => {
+      socketRef.current?.off("download:completed", callback);
+    };
+  };
+
   // Manually connect
   const connect = () => {
     socketRef.current?.connect();
@@ -124,6 +139,7 @@ export const useWebSocket = ({
     isConnected,
     isAuthenticated,
     onDownloadProgress,
+    onDownloadCompleted,
     connect,
     disconnect,
   };
