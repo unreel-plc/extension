@@ -1,7 +1,9 @@
 import { createRoot } from "react-dom/client";
+import type { Root } from "react-dom/client";
 import styles from "@/index.css?inline";
 import { isUserAuthenticated } from "@/lib/auth";
 import TiktokBookmark from "./titok-bookmark";
+import BookmarkAllTikTokButton from "@/components/bookmark-all-tiktok-button";
 
 declare global {
   interface WindowEventMap {
@@ -13,6 +15,8 @@ export class TikTokHandle {
   private actionsObserver?: MutationObserver;
   private scanTimeout?: number;
   private authed: boolean = false;
+  private bookmarkAllRoot?: Root;
+  private favoritesCheckInterval?: number;
 
   constructor() {
     this.handleAuth();
@@ -30,6 +34,10 @@ export class TikTokHandle {
     this.cleanupExistingButtons();
     // Initial scan for existing items
     this.processActions(document);
+    // Check for favorites page and render bookmark all button
+    this.handleFavoritesPage();
+    // Start monitoring for favorites page
+    this.startFavoritesPageMonitor();
   }
 
   private cleanupExistingButtons(): void {
@@ -37,6 +45,71 @@ export class TikTokHandle {
       "#unreel-bookmark-button-host"
     );
     existingHosts.forEach((host) => host.remove());
+  }
+
+  private cleanupBookmarkAllButton(): void {
+    // Remove the bookmark all favorites button if it exists
+    const existingButton = document.getElementById(
+      "unreel-bookmark-all-tiktok-host"
+    );
+    if (existingButton) {
+      if (this.bookmarkAllRoot) {
+        this.bookmarkAllRoot.unmount();
+        this.bookmarkAllRoot = undefined;
+      }
+      existingButton.remove();
+    }
+  }
+
+  /**
+   * Checks if the current page is a favorites page
+   * TikTok favorites page has data-e2e="favorites-item-list"
+   */
+  private isFavoritesPage(): boolean {
+    // Check for the favorites item list container
+    const favoritesContainer = document.querySelector(
+      '[data-e2e="favorites-item-list"]'
+    );
+    return !!favoritesContainer;
+  }
+
+  /**
+   * Handles the favorites page by adding the bookmark all button
+   */
+  private handleFavoritesPage(): void {
+    if (this.isFavoritesPage()) {
+      this.renderBookmarkAllButton();
+    } else {
+      this.cleanupBookmarkAllButton();
+    }
+  }
+
+  /**
+   * Monitors for favorites page changes (TikTok is an SPA)
+   */
+  private startFavoritesPageMonitor(): void {
+    // Clear any existing interval
+    if (this.favoritesCheckInterval) {
+      clearInterval(this.favoritesCheckInterval);
+    }
+    // Check every 1 second for favorites page
+    this.favoritesCheckInterval = window.setInterval(() => {
+      this.handleFavoritesPage();
+    }, 1000);
+  }
+
+  /**
+   * Cleanup method to stop monitoring and remove buttons
+   */
+  public cleanup(): void {
+    if (this.favoritesCheckInterval) {
+      clearInterval(this.favoritesCheckInterval);
+    }
+    if (this.actionsObserver) {
+      this.actionsObserver.disconnect();
+    }
+    this.cleanupExistingButtons();
+    this.cleanupBookmarkAllButton();
   }
 
   private bootstrapObserver() {
@@ -188,4 +261,43 @@ export class TikTokHandle {
       // ignore
     }
   }
+
+  /**
+   * Renders the Bookmark All Favorites button using Shadow DOM
+   */
+  private renderBookmarkAllButton = (): void => {
+    try {
+      // Check if button already exists
+      if (document.getElementById("unreel-bookmark-all-tiktok-host")) {
+        return;
+      }
+
+      // Create a shadow host for the bookmark all button
+      const host = document.createElement("div");
+      host.id = "unreel-bookmark-all-tiktok-host";
+
+      // Append to body
+      document.body.appendChild(host);
+
+      // Attach shadow DOM and inject our Tailwind CSS
+      const shadow = host.attachShadow({ mode: "open" });
+      const styleEl = document.createElement("style");
+      styleEl.textContent = styles;
+      shadow.appendChild(styleEl);
+
+      // Mount point inside shadow
+      const mount = document.createElement("div");
+      shadow.appendChild(mount);
+
+      // Render the React component inside the shadow root
+      this.bookmarkAllRoot = createRoot(mount);
+      this.bookmarkAllRoot.render(
+        <BookmarkAllTikTokButton
+          onClose={() => this.cleanupBookmarkAllButton()}
+        />
+      );
+    } catch (error) {
+      console.warn("Failed to render bookmark all tiktok button", error);
+    }
+  };
 }
