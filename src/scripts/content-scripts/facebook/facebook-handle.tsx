@@ -2,6 +2,7 @@ import { createRoot } from "react-dom/client";
 import styles from "@/index.css?inline";
 import { isUserAuthenticated } from "@/lib/auth";
 import FacebookBookmark from "./facebook-bookmark";
+import BookmarkAllFacebookSavedReelsButton from "@/components/bookmark-all-facebook-saved-reels-button";
 
 declare global {
   interface WindowEventMap {
@@ -31,11 +32,16 @@ export class FacebookHandle {
     this.bootstrapReelsObserver();
     this.cleanupExistingButtons();
     this.processAllReels(document);
+    this.maybeRenderSavedReelsBookmarkAll();
   }
 
   private isOnReelsUrl(): boolean {
     // Facebook reels surface
     return /\/reel\//.test(this.currentUrl);
+  }
+
+  private isOnSavedReelsProfile(): boolean {
+    return /\/saved_reels_on_profile/.test(this.currentUrl);
   }
 
   private cleanupExistingButtons(): void {
@@ -61,6 +67,7 @@ export class FacebookHandle {
         if (this.isOnReelsUrl()) {
           this.processAllReels(document);
         }
+        this.maybeRenderSavedReelsBookmarkAll();
       }
     );
   };
@@ -89,6 +96,42 @@ export class FacebookHandle {
       });
     } catch (error) {
       console.warn("[Unreel][FB] Failed to start reels observer", error);
+    }
+  };
+
+  private maybeRenderSavedReelsBookmarkAll = () => {
+    try {
+      if (!this.isOnSavedReelsProfile()) return;
+      if (!this.authed) return;
+
+      const existing = document.querySelector("#unreel-bookmark-all-host");
+      if (existing) return;
+
+      const host = document.createElement("div");
+      host.id = "unreel-bookmark-all-host";
+      document.documentElement.appendChild(host);
+
+      const shadow = host.attachShadow({ mode: "open" });
+      const styleEl = document.createElement("style");
+      styleEl.textContent = styles;
+      shadow.appendChild(styleEl);
+
+      const mount = document.createElement("div");
+      shadow.appendChild(mount);
+
+      const root = createRoot(mount);
+      root.render(
+        <BookmarkAllFacebookSavedReelsButton
+          onClose={() => {
+            host.remove();
+          }}
+        />
+      );
+    } catch (error) {
+      console.warn(
+        "[Unreel][FB] Failed to render saved reels bookmark-all",
+        error
+      );
     }
   };
 
